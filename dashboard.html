@@ -27,18 +27,9 @@ padding:15px 5%;
 border-bottom:4px solid #d71920;
 }
 
-.brand{
-display:flex;
-align-items:center;
-gap:13px;
-}
-
+.brand{display:flex;align-items:center;gap:13px}
 .brand img{width:58px;height:55px;object-fit:contain}
-
-.brand h1{
-font-size:21px;
-font-weight:800;
-}
+.brand h1{font-size:21px;font-weight:800}
 
 nav{
 background:#171717;
@@ -148,11 +139,7 @@ border-top:4px solid #d71920;
 margin-top:45px;
 }
 
-footer h3{
-font-size:20px;
-font-weight:800;
-}
-
+footer h3{font-size:20px;font-weight:800}
 footer p{color:#ccc;margin-top:8px}
 
 @media(max-width:650px){
@@ -204,13 +191,13 @@ nav{gap:10px;flex-wrap:wrap}
 <form id="profileForm">
 
 <label for="editName">Full Name</label>
-<input id="editName" type="text" maxlength="100" required>
+<input id="editName" type="text" maxlength="100" autocomplete="name" required>
 
 <label for="editUsername">Username</label>
-<input id="editUsername" type="text" minlength="3" maxlength="30" required>
+<input id="editUsername" type="text" minlength="3" maxlength="30" autocomplete="username" required>
 
 <label for="editPhone">Phone Number</label>
-<input id="editPhone" type="tel">
+<input id="editPhone" type="tel" autocomplete="tel">
 
 <button type="submit" id="saveProfile">SAVE PROFILE</button>
 
@@ -276,40 +263,100 @@ el.textContent=text;
 el.style.color=success?"#16803c":"#d71920";
 }
 
-function showProfile(user){
+function getProfileData(user){
 
 const meta=user.user_metadata||{};
 
-const fullName=meta.full_name||meta.name||"";
-const username=meta.username||"";
-const phone=meta.phone||"";
+return {
+fullName:
+meta.full_name ||
+meta.fullName ||
+meta.name ||
+"",
+
+username:
+meta.username ||
+meta.user_name ||
+meta.userName ||
+"",
+
+phone:
+meta.phone ||
+meta.phone_number ||
+meta.phoneNumber ||
+meta.mobile ||
+user.phone ||
+""
+};
+
+}
+
+function showProfile(user){
+
+if(!user) return;
+
+const profile=getProfileData(user);
+
+const fullName=profile.fullName;
+const username=profile.username;
+const phone=profile.phone;
 
 document.getElementById("welcomeName").textContent=
 "WELCOME, "+(fullName||username||"JNTV MEMBER").toUpperCase()+"!";
 
-document.getElementById("fullName").textContent=fullName||"Not provided";
-document.getElementById("email").textContent=user.email||"Not provided";
-document.getElementById("username").textContent=username||"Not provided";
-document.getElementById("phone").textContent=phone||"Not provided";
+document.getElementById("fullName").textContent=
+fullName||"Not provided";
+
+document.getElementById("email").textContent=
+user.email||"Not provided";
+
+document.getElementById("username").textContent=
+username||"Not provided";
+
+document.getElementById("phone").textContent=
+phone||"Not provided";
 
 document.getElementById("memberId").textContent=
-user.id ? "JNTV-"+user.id.substring(0,8).toUpperCase() : "Unavailable";
-
-const created=user.created_at;
+user.id
+?"JNTV-"+user.id.substring(0,8).toUpperCase()
+:"Unavailable";
 
 document.getElementById("registrationDate").textContent=
-created ? new Date(created).toLocaleDateString("en-GB",{
+user.created_at
+?new Date(user.created_at).toLocaleDateString("en-GB",{
 day:"2-digit",
 month:"long",
 year:"numeric"
-}) : "Unavailable";
+})
+:"Unavailable";
 
 document.getElementById("accountStatus").textContent=
-user.email_confirmed_at?"Verified":"Email not verified";
+user.email_confirmed_at
+?"Verified"
+:"Email not verified";
+
+/* IMPORTANT: PRE-FILL EDIT FIELDS */
 
 document.getElementById("editName").value=fullName;
 document.getElementById("editUsername").value=username;
 document.getElementById("editPhone").value=phone;
+
+}
+
+async function refreshProfile(){
+
+const {data,error}=await db.auth.getUser();
+
+if(error) throw error;
+
+if(!data.user) throw new Error("Please sign in again.");
+
+currentUser=data.user;
+
+showProfile(currentUser);
+
+return currentUser;
+
 }
 
 async function initializeDashboard(){
@@ -321,24 +368,29 @@ const {data,error}=await db.auth.getSession();
 if(error) throw error;
 
 if(!data.session){
+
 window.location.replace("signin.html");
 return;
+
 }
 
-currentUser=data.session.user;
-showProfile(currentUser);
+/* Retrieve the latest authenticated user from Supabase */
+
+await refreshProfile();
 
 }catch(error){
 
 document.getElementById("welcomeName").textContent="ACCOUNT ERROR";
+
 showMessage("profileMessage",error.message);
 
 }
+
 }
 
 initializeDashboard();
 
-// SAVE PROFILE
+/* SAVE PROFILE */
 
 document.getElementById("profileForm").addEventListener("submit",async function(e){
 
@@ -368,19 +420,30 @@ button.textContent="SAVING...";
 try{
 
 const {data,error}=await db.auth.updateUser({
+
 data:{
 full_name:fullName,
 username:username,
 phone:phone
 }
+
 });
 
 if(error) throw error;
 
+if(data.user){
 currentUser=data.user;
-showProfile(currentUser);
+}
 
-showMessage("profileMessage","Your profile has been updated successfully.",true);
+/* Retrieve the saved information again */
+
+await refreshProfile();
+
+showMessage(
+"profileMessage",
+"Your profile has been updated successfully.",
+true
+);
 
 }catch(error){
 
@@ -395,7 +458,7 @@ button.textContent="SAVE PROFILE";
 
 });
 
-// CHANGE PASSWORD
+/* CHANGE PASSWORD */
 
 document.getElementById("passwordForm").addEventListener("submit",async function(e){
 
@@ -405,6 +468,7 @@ if(!currentUser) return;
 
 const password=document.getElementById("newPassword").value;
 const confirm=document.getElementById("confirmPassword").value;
+
 const button=document.getElementById("passwordButton");
 
 if(password.length<8){
@@ -422,13 +486,19 @@ button.textContent="UPDATING...";
 
 try{
 
-const {error}=await db.auth.updateUser({password});
+const {error}=await db.auth.updateUser({
+password:password
+});
 
 if(error) throw error;
 
 document.getElementById("passwordForm").reset();
 
-showMessage("passwordMessage","Your password has been updated successfully.",true);
+showMessage(
+"passwordMessage",
+"Your password has been updated successfully.",
+true
+);
 
 }catch(error){
 
@@ -443,7 +513,7 @@ button.textContent="UPDATE PASSWORD";
 
 });
 
-// SIGN OUT
+/* SIGN OUT */
 
 document.getElementById("logoutButton").addEventListener("click",async function(){
 
