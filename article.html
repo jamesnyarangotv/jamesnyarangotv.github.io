@@ -25,7 +25,6 @@
 }
 
 *{box-sizing:border-box}
-
 html{scroll-behavior:smooth}
 
 body{
@@ -39,9 +38,9 @@ line-height:1.55;
 }
 
 a{text-decoration:none;color:inherit}
-button,input{font:inherit}
+button,input,textarea{font:inherit}
 
-/* HEADER — MATCHES HOMEPAGE */
+/* HEADER */
 
 .top-header{
 background:var(--navy);
@@ -181,9 +180,7 @@ max-width:900px;
 margin:auto;
 }
 
-.article{
-background:#fff;
-}
+.article{background:#fff}
 
 .category{
 display:block;
@@ -261,8 +258,7 @@ padding-top:20px;
 border-top:1px solid var(--line);
 }
 
-.back-button,
-.next-button{
+.back-button,.next-button{
 display:inline-block;
 padding:10px 16px;
 background:var(--red);
@@ -271,14 +267,9 @@ font-size:11px;
 font-weight:900;
 }
 
-.next-button{
-background:var(--navy);
-}
+.next-button{background:var(--navy)}
 
-.back-button:hover,
-.next-button:hover{
-opacity:.88;
-}
+.back-button:hover,.next-button:hover{opacity:.88}
 
 .message{
 padding:35px;
@@ -294,10 +285,7 @@ font-size:23px;
 font-weight:900;
 }
 
-.message p{
-color:#626970;
-font-size:14px;
-}
+.message p{color:#626970;font-size:14px}
 
 .message a{
 display:inline-block;
@@ -309,7 +297,175 @@ font-size:11px;
 font-weight:900;
 }
 
-/* FOOTER — SAME AS HOMEPAGE */
+/* NEW MEMBER COMMENTS SECTION */
+
+.comments-section{
+margin-top:45px;
+padding-top:25px;
+border-top:3px solid var(--navy);
+}
+
+.comments-heading{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+border-bottom:1px solid var(--line);
+padding-bottom:12px;
+margin-bottom:22px;
+}
+
+.comments-heading h2{
+margin:0;
+color:var(--navy);
+font-size:23px;
+font-weight:900;
+}
+
+.comment-count{
+background:#f0f2f5;
+padding:5px 11px;
+border-radius:20px;
+font-size:12px;
+font-weight:800;
+}
+
+.comment-form{
+background:#f7f8fa;
+border:1px solid var(--line);
+padding:22px;
+margin-bottom:25px;
+}
+
+.comment-form h3{
+margin:0 0 6px;
+color:var(--navy);
+font-size:17px;
+font-weight:900;
+}
+
+.comment-form p{
+margin:0 0 15px;
+color:var(--muted);
+font-size:13px;
+}
+
+.comment-form textarea{
+display:block;
+width:100%;
+min-height:115px;
+resize:vertical;
+padding:13px;
+border:1px solid #d9dee5;
+outline:none;
+background:white;
+font-family:'Jost',sans-serif;
+font-size:14px;
+}
+
+.comment-form textarea:focus{
+border-color:var(--navy);
+}
+
+.comment-submit{
+margin-top:12px;
+padding:11px 22px;
+border:0;
+background:var(--red);
+color:white;
+font-size:12px;
+font-weight:900;
+cursor:pointer;
+}
+
+.comment-submit:hover{background:#b90012}
+
+.comment-submit:disabled{
+opacity:.6;
+cursor:not-allowed;
+}
+
+.comment-login{
+padding:20px;
+background:#f7f8fa;
+border:1px solid var(--line);
+margin-bottom:25px;
+}
+
+.comment-login p{
+margin:0;
+color:#555d65;
+font-size:14px;
+}
+
+.comment-login a{
+display:inline-block;
+margin-top:12px;
+padding:9px 17px;
+background:var(--navy);
+color:white;
+font-size:12px;
+font-weight:900;
+}
+
+.comment-item{
+padding:18px 0;
+border-bottom:1px solid var(--line);
+}
+
+.comment-top{
+display:flex;
+align-items:center;
+justify-content:space-between;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.comment-member{
+color:var(--navy);
+font-size:14px;
+font-weight:900;
+}
+
+.comment-date{
+color:#858b93;
+font-size:11px;
+}
+
+.comment-content{
+margin:10px 0;
+color:#343a40;
+font-size:14px;
+line-height:1.75;
+overflow-wrap:anywhere;
+white-space:pre-wrap;
+}
+
+.delete-comment{
+border:0;
+background:none;
+padding:0;
+color:var(--red);
+font-size:11px;
+font-weight:800;
+cursor:pointer;
+}
+
+.comments-status{
+padding:18px;
+color:var(--muted);
+background:#f7f8fa;
+font-size:13px;
+text-align:center;
+}
+
+.comment-error{
+color:var(--red);
+font-size:13px;
+margin-top:10px;
+}
+
+/* FOOTER */
 
 .footer{
 margin-top:50px;
@@ -405,25 +561,15 @@ font-size:13px;
 /* TABLET */
 
 @media(max-width:1150px) and (min-width:761px){
-
 .header-inner{
 gap:7px;
 padding-left:14px;
 padding-right:14px;
 }
 
-.brand img{
-width:72px;
-height:65px;
-}
-
-.nav-inner a{
-padding:0 7px;
-font-size:11px;
-}
-
+.brand img{width:72px;height:65px}
+.nav-inner a{padding:0 7px;font-size:11px}
 .search-box{width:125px}
-
 .header-actions{gap:6px}
 
 .live-button{
@@ -431,31 +577,20 @@ padding:10px 8px;
 font-size:10px;
 }
 
-.footer-columns{
-grid-template-columns:repeat(2,1fr);
-}
-
+.footer-columns{grid-template-columns:repeat(2,1fr)}
 }
 
 /* MOBILE */
 
 @media(max-width:760px){
-
 .header-inner{
 padding:9px 14px;
 gap:8px;
 flex-wrap:wrap;
 }
 
-.brand img{
-width:72px;
-height:58px;
-}
-
-.header-actions{
-margin-left:auto;
-}
-
+.brand img{width:72px;height:58px}
+.header-actions{margin-left:auto}
 .search-box{width:165px}
 
 .navigation{
@@ -474,46 +609,33 @@ padding:0 12px;
 font-size:11px;
 }
 
-.article-main{
-padding:20px 15px 40px;
-}
-
+.article-main{padding:20px 15px 40px}
 .article h1{font-size:27px}
-
 .subheadline{font-size:15px}
-
 .story{font-size:16px}
 
 .footer-columns{
 grid-template-columns:repeat(2,1fr);
 gap:25px;
 }
-
 }
 
 @media(max-width:520px){
-
 .header-actions{
 width:100%;
 margin:0;
 }
 
 .search-box{flex:1}
-
 .live-button{font-size:10px}
-
 .article-main{padding:18px 15px 35px}
-
 .article h1{font-size:25px}
-
 .article-image{margin:12px 0 20px}
-
 .story{font-size:15px;line-height:1.85}
-
 .footer-columns{grid-template-columns:1fr}
-
 .footer-inner{padding:30px 17px 0}
-
+.comments-heading h2{font-size:20px}
+.comment-form{padding:16px}
 }
 
 @media(prefers-reduced-motion:reduce){
@@ -743,6 +865,265 @@ container.innerHTML=`
 </div>`;
 }
 
+/* MEMBER COMMENTS */
+
+async function renderComments(articleId){
+
+const section=document.getElementById("commentsSection");
+const list=document.getElementById("commentsList");
+const formArea=document.getElementById("commentFormArea");
+const count=document.getElementById("commentCount");
+
+if(!section||!list)return;
+
+list.innerHTML='<div class="comments-status">Loading comments...</div>';
+
+try{
+
+const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+if(sessionError)throw sessionError;
+
+const user=sessionData.session?.user||null;
+
+if(user){
+
+formArea.innerHTML=`
+<form class="comment-form" id="memberCommentForm">
+<h3>LEAVE A COMMENT</h3>
+<p>Share your thoughts on this news story.</p>
+
+<textarea
+id="memberComment"
+maxlength="2000"
+required
+placeholder="Write your comment here..."
+></textarea>
+
+<button type="submit" class="comment-submit" id="commentSubmit">
+POST COMMENT
+</button>
+
+<div id="commentError" class="comment-error" role="alert"></div>
+</form>
+`;
+
+}else{
+
+formArea.innerHTML=`
+<div class="comment-login">
+<p><strong>Want to join the discussion?</strong><br>
+Sign in to your JNTV member account to comment on this story.</p>
+
+<a href="./signin.html">SIGN IN TO COMMENT</a>
+</div>
+`;
+
+}
+
+const {data:comments,error}=await db
+.from("article_comments")
+.select("*")
+.eq("article_id",String(articleId))
+.order("created_at",{ascending:false});
+
+if(error)throw error;
+
+const rows=comments||[];
+
+count.textContent=rows.length+" COMMENTS";
+
+if(!rows.length){
+
+list.innerHTML='<div class="comments-status">No comments yet. Be the first to share your thoughts.</div>';
+
+}else{
+
+list.innerHTML=rows.map(comment=>{
+
+const date=new Date(comment.created_at);
+
+const formattedDate=isNaN(date.getTime())
+?""
+:date.toLocaleString("en-UG",{
+day:"numeric",
+month:"short",
+year:"numeric",
+hour:"2-digit",
+minute:"2-digit"
+});
+
+const isOwner=user&&String(user.id)===String(comment.user_id);
+
+return `
+<div class="comment-item">
+<div class="comment-top">
+<span class="comment-member">${safe(comment.member_name)}</span>
+<span class="comment-date">${safe(formattedDate)}</span>
+</div>
+
+<div class="comment-content">${safe(comment.content)}</div>
+
+${isOwner?`
+<button
+type="button"
+class="delete-comment"
+data-delete-comment="${safe(comment.id)}"
+>DELETE MY COMMENT</button>
+`:""}
+
+</div>
+`;
+
+}).join("");
+
+}
+
+}catch(error){
+
+console.error("JNTV comments loading error:",error);
+
+list.innerHTML=`
+<div class="comments-status">
+Comments could not be loaded. Please refresh the page.
+</div>`;
+
+count.textContent="COMMENTS";
+
+}
+
+}
+
+/* SUBMIT COMMENT */
+
+container.addEventListener("submit",async function(event){
+
+if(event.target.id!=="memberCommentForm")return;
+
+event.preventDefault();
+
+const textarea=document.getElementById("memberComment");
+const submitButton=document.getElementById("commentSubmit");
+const errorBox=document.getElementById("commentError");
+
+const content=textarea.value.trim();
+
+if(!content){
+errorBox.textContent="Please write a comment first.";
+return;
+}
+
+if(content.length>2000){
+errorBox.textContent="Your comment cannot exceed 2,000 characters.";
+return;
+}
+
+submitButton.disabled=true;
+submitButton.textContent="POSTING...";
+
+try{
+
+const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+if(sessionError)throw sessionError;
+
+const user=sessionData.session?.user;
+
+if(!user){
+throw new Error("Please sign in before commenting.");
+}
+
+const metadata=user.user_metadata||{};
+
+const memberName=
+metadata.full_name||
+metadata.username||
+user.email||
+"JNTV Member";
+
+const params=new URLSearchParams(window.location.search);
+const articleId=params.get("id");
+
+const {error}=await db
+.from("article_comments")
+.insert({
+article_id:String(articleId),
+user_id:user.id,
+member_name:memberName,
+content:content
+});
+
+if(error)throw error;
+
+textarea.value="";
+
+await renderComments(articleId);
+
+}catch(error){
+
+console.error("JNTV comment submission error:",error);
+
+errorBox.textContent=error.message||"Your comment could not be submitted.";
+
+submitButton.disabled=false;
+submitButton.textContent="POST COMMENT";
+
+}
+
+});
+
+/* DELETE OWN COMMENT */
+
+container.addEventListener("click",async function(event){
+
+const button=event.target.closest("[data-delete-comment]");
+
+if(!button)return;
+
+const commentId=button.dataset.deleteComment;
+
+if(!confirm("Are you sure you want to delete your comment?"))return;
+
+button.disabled=true;
+button.textContent="DELETING...";
+
+try{
+
+const {data:sessionData,error:sessionError}=await db.auth.getSession();
+
+if(sessionError)throw sessionError;
+
+const user=sessionData.session?.user;
+
+if(!user)throw new Error("Please sign in again.");
+
+const {error}=await db
+.from("article_comments")
+.delete()
+.eq("id",commentId)
+.eq("user_id",user.id);
+
+if(error)throw error;
+
+const params=new URLSearchParams(window.location.search);
+
+await renderComments(params.get("id"));
+
+}catch(error){
+
+console.error("JNTV comment deletion error:",error);
+
+alert(error.message||"Unable to delete comment.");
+
+button.disabled=false;
+button.textContent="DELETE MY COMMENT";
+
+}
+
+});
+
+/* RENDER ARTICLE */
+
 function renderArticle(article,articles){
 
 const headline=getTitle(article);
@@ -771,6 +1152,7 @@ onerror="this.style.display='none'">
 let nextArticle=null;
 
 if(articles.length){
+
 const currentIndex=articles.findIndex(
 item=>String(item.id)===String(article.id)
 );
@@ -778,6 +1160,7 @@ item=>String(item.id)===String(article.id)
 if(currentIndex>=0&&currentIndex<articles.length-1){
 nextArticle=articles[currentIndex+1];
 }
+
 }
 
 const nextButton=nextArticle?`
@@ -814,9 +1197,30 @@ ${nextButton}
 </div>
 
 </article>
+
+<!-- MEMBER COMMENTS -->
+
+<section class="comments-section" id="commentsSection">
+
+<div class="comments-heading">
+<h2>COMMENTS & DISCUSSION</h2>
+<span class="comment-count" id="commentCount">COMMENTS</span>
+</div>
+
+<div id="commentFormArea"></div>
+
+<div id="commentsList">
+<div class="comments-status">Loading comments...</div>
+</div>
+
+</section>
 `;
 
+renderComments(article.id);
+
 }
+
+/* LOAD ARTICLE */
 
 async function loadArticle(){
 
