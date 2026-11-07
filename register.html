@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 * {
     margin: 0;
@@ -156,11 +158,18 @@ nav a:hover {
     background: #a90f16;
 }
 
+.register-button:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
 .message {
     margin-top: 18px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
 .login-link {
@@ -215,6 +224,7 @@ footer p {
 
     nav a {
         padding: 12px 9px;
+        font-size: 15px;
     }
 }
 </style>
@@ -255,26 +265,29 @@ footer p {
             <div class="form-group">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname"
-                    placeholder="Enter your full name" required>
+                    placeholder="Enter your full name"
+                    maxlength="100" autocomplete="name" required>
             </div>
 
             <div class="form-group">
                 <label for="email">Email Address</label>
                 <input type="email" id="email"
-                    placeholder="Enter your email address" required>
+                    placeholder="Enter your email address"
+                    autocomplete="email" required>
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="tel" id="phone"
-                    placeholder="Enter your phone number" required>
+                    placeholder="Enter your phone number"
+                    autocomplete="tel" required>
             </div>
 
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username"
                     placeholder="Choose a username"
-                    minlength="3" required>
+                    minlength="3" maxlength="30" required>
             </div>
 
             <div class="form-group">
@@ -283,7 +296,7 @@ footer p {
                 <div class="password-wrapper">
                     <input type="password" id="password"
                         placeholder="Create a password"
-                        minlength="8" required>
+                        minlength="8" autocomplete="new-password" required>
 
                     <button type="button"
                         class="show-password"
@@ -299,7 +312,7 @@ footer p {
                 <div class="password-wrapper">
                     <input type="password" id="confirmPassword"
                         placeholder="Confirm your password"
-                        minlength="8" required>
+                        minlength="8" autocomplete="new-password" required>
 
                     <button type="button"
                         class="show-password"
@@ -309,11 +322,11 @@ footer p {
                 </div>
             </div>
 
-            <button type="submit" class="register-button">
+            <button type="submit" class="register-button" id="registerButton">
                 CREATE ACCOUNT
             </button>
 
-            <div class="message" id="message"></div>
+            <div class="message" id="message" role="status" aria-live="polite"></div>
 
         </form>
 
@@ -338,7 +351,23 @@ footer p {
 
 <script>
 
+// SUPABASE CONNECTION
+
+const SUPABASE_URL =
+"https://eqogivrposfajrkdwqbq.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+// SHOW AND HIDE PASSWORD
+
 function togglePassword(id, button) {
+
     const input = document.getElementById(id);
 
     if (input.type === "password") {
@@ -348,37 +377,125 @@ function togglePassword(id, button) {
         input.type = "password";
         button.textContent = "SHOW";
     }
+
 }
 
-document.getElementById("registrationForm")
-.addEventListener("submit", function(event) {
+// MESSAGE DISPLAY
 
-    event.preventDefault();
-
-    const fullname = document.getElementById("fullname").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-    const phone = document.getElementById("phone").value.trim();
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirmPassword").value;
+function showMessage(text, success = false) {
 
     const message = document.getElementById("message");
 
+    message.style.color = success ? "#16803c" : "#d71920";
+    message.textContent = text;
+
+}
+
+// REGISTRATION SYSTEM
+
+document.getElementById("registrationForm")
+.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const fullname =
+        document.getElementById("fullname").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim().toLowerCase();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const button =
+        document.getElementById("registerButton");
+
+    if (fullname.length < 2) {
+        showMessage("Please enter your full name.");
+        return;
+    }
+
+    if (username.length < 3) {
+        showMessage("Username must contain at least 3 characters.");
+        return;
+    }
+
     if (password.length < 8) {
-        message.style.color = "#d71920";
-        message.textContent = "Password must contain at least 8 characters.";
+        showMessage("Password must contain at least 8 characters.");
         return;
     }
 
     if (password !== confirmPassword) {
-        message.style.color = "#d71920";
-        message.textContent = "Passwords do not match.";
+        showMessage("Passwords do not match.");
         return;
     }
 
-    message.style.color = "#d71920";
-    message.textContent =
-        "Registration interface ready. Connect a secure authentication server to create your account.";
+    button.disabled = true;
+    button.textContent = "CREATING ACCOUNT...";
+
+    try {
+
+        const { data, error } = await db.auth.signUp({
+
+            email: email,
+            password: password,
+
+            options: {
+
+                data: {
+                    full_name: fullname,
+                    phone: phone,
+                    username: username
+                },
+
+                emailRedirectTo:
+                "https://jamesnyarangotv.github.io/signin.html"
+
+            }
+
+        });
+
+        if (error) throw error;
+
+        document.getElementById("registrationForm").reset();
+
+        if (data.session) {
+
+            showMessage(
+                "Congratulations! Your JNTV account has been created successfully. You can now sign in.",
+                true
+            );
+
+        } else {
+
+            showMessage(
+                "Registration successful! Please check your email and click the confirmation link to activate your JNTV account.",
+                true
+            );
+
+        }
+
+    } catch (error) {
+
+        showMessage(
+            error.message || "Registration failed. Please try again."
+        );
+
+    } finally {
+
+        button.disabled = false;
+        button.textContent = "CREATE ACCOUNT";
+
+    }
 
 });
 
