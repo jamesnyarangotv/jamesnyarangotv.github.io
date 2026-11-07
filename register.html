@@ -292,33 +292,23 @@ footer p {
 
             <div class="form-group">
                 <label for="password">Password</label>
-
                 <div class="password-wrapper">
                     <input type="password" id="password"
                         placeholder="Create a password"
                         minlength="8" autocomplete="new-password" required>
-
-                    <button type="button"
-                        class="show-password"
-                        onclick="togglePassword('password', this)">
-                        SHOW
-                    </button>
+                    <button type="button" class="show-password"
+                        onclick="togglePassword('password', this)">SHOW</button>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="confirmPassword">Confirm Password</label>
-
                 <div class="password-wrapper">
                     <input type="password" id="confirmPassword"
                         placeholder="Confirm your password"
                         minlength="8" autocomplete="new-password" required>
-
-                    <button type="button"
-                        class="show-password"
-                        onclick="togglePassword('confirmPassword', this)">
-                        SHOW
-                    </button>
+                    <button type="button" class="show-password"
+                        onclick="togglePassword('confirmPassword', this)">SHOW</button>
                 </div>
             </div>
 
@@ -350,24 +340,16 @@ footer p {
 </footer>
 
 <script>
+const SUPABASE_URL = "https://eqogivrposfajrkdwqbq.supabase.co";
 
-// SUPABASE CONNECTION
-
-const SUPABASE_URL =
-"https://eqogivrposfajrkdwqbq.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
+const SUPABASE_KEY = "sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
 
 const db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
-// SHOW AND HIDE PASSWORD
-
 function togglePassword(id, button) {
-
     const input = document.getElementById(id);
 
     if (input.type === "password") {
@@ -377,47 +359,27 @@ function togglePassword(id, button) {
         input.type = "password";
         button.textContent = "SHOW";
     }
-
 }
-
-// MESSAGE DISPLAY
 
 function showMessage(text, success = false) {
-
     const message = document.getElementById("message");
-
     message.style.color = success ? "#16803c" : "#d71920";
     message.textContent = text;
-
 }
-
-// REGISTRATION SYSTEM
 
 document.getElementById("registrationForm")
 .addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
-    const fullname =
-        document.getElementById("fullname").value.trim();
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+    const phone = document.getElementById("phone").value.trim();
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
-    const email =
-        document.getElementById("email").value.trim().toLowerCase();
-
-    const phone =
-        document.getElementById("phone").value.trim();
-
-    const username =
-        document.getElementById("username").value.trim();
-
-    const password =
-        document.getElementById("password").value;
-
-    const confirmPassword =
-        document.getElementById("confirmPassword").value;
-
-    const button =
-        document.getElementById("registerButton");
+    const button = document.getElementById("registerButton");
 
     if (fullname.length < 2) {
         showMessage("Please enter your full name.");
@@ -445,50 +407,38 @@ document.getElementById("registrationForm")
     try {
 
         const { data, error } = await db.auth.signUp({
-
             email: email,
             password: password,
-
             options: {
-
                 data: {
                     full_name: fullname,
                     phone: phone,
                     username: username
                 },
-
                 emailRedirectTo:
-                "https://jamesnyarangotv.github.io/signin.html"
-
+                    "https://jamesnyarangotv.github.io/signin.html"
             }
-
         });
 
         if (error) throw error;
 
-        document.getElementById("registrationForm").reset();
-
         if (data.session) {
-
             showMessage(
-                "Congratulations! Your JNTV account has been created successfully. You can now sign in.",
+                "Your JNTV reader account has been created successfully. You can now sign in.",
                 true
             );
-
         } else {
-
             showMessage(
-                "Registration successful! Please check your email and click the confirmation link to activate your JNTV account.",
+                "Registration received! Please check your email and click the confirmation link to activate your JNTV account.",
                 true
             );
-
         }
+
+        document.getElementById("registrationForm").reset();
 
     } catch (error) {
 
-        showMessage(
-            error.message || "Registration failed. Please try again."
-        );
+        showMessage(error.message || "Registration failed. Please try again.");
 
     } finally {
 
@@ -496,9 +446,7 @@ document.getElementById("registrationForm")
         button.textContent = "CREATE ACCOUNT";
 
     }
-
 });
-
 </script>
 
 </body>
