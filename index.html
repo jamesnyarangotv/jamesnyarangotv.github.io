@@ -15,13 +15,10 @@
 <style>
 :root {
   --navy: #071a35;
-  --navy2: #102b4e;
   --red: #c8102e;
   --text: #172033;
   --muted: #697386;
   --line: #e5e9ef;
-  --soft: #f4f6f9;
-  --white: #ffffff;
 }
 
 * {
@@ -47,49 +44,90 @@ a {
   text-decoration: none;
 }
 
-button,
-input {
-  font: inherit;
-}
+/* ONE-LINE HEADER */
 
-/* MAIN NAVIGATION */
-
-.navbar {
+.site-header {
   width: 100%;
   background: var(--navy);
-  color: #fff;
   border-bottom: 3px solid var(--red);
 }
 
-.nav-inner {
-  width: 94%;
-  max-width: 1200px;
-  min-height: 59px;
+.header-one-line {
+  width: 96%;
+  max-width: 1400px;
+  min-height: 100px;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3px;
+  gap: 12px;
 }
 
-.nav-inner a {
-  color: #fff;
-  padding: 19px 13px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .3px;
-  text-transform: uppercase;
+.logo-link {
+  flex: 0 0 105px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-link img {
+  display: block;
+  width: 105px;
+  height: 78px;
+  object-fit: contain;
+}
+
+.main-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
   white-space: nowrap;
-  text-align: center;
+  gap: 0;
+}
+
+.main-navigation a {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 12px 9px;
+  white-space: nowrap;
   transition: background .2s;
 }
 
-.nav-inner a:hover,
-.nav-inner a.active {
+.main-navigation a:hover,
+.main-navigation a.active {
   background: var(--red);
 }
 
-/* HEADLINE TICKER */
+.header-search {
+  flex: 0 0 165px;
+  height: 34px;
+  display: flex;
+  background: #fff;
+}
+
+.header-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  padding: 0 8px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+}
+
+.header-search button {
+  border: 0;
+  background: var(--red);
+  color: #fff;
+  padding: 0 10px;
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* TICKER */
 
 .ticker {
   background: #f2f4f7;
@@ -106,7 +144,6 @@ input {
   padding: 9px 14px;
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: .5px;
   white-space: nowrap;
   z-index: 2;
 }
@@ -146,7 +183,7 @@ input {
   to { transform: translateX(-50%); }
 }
 
-/* MAIN PAGE */
+/* PAGE CONTAINER */
 
 .container {
   width: 92%;
@@ -180,7 +217,7 @@ input {
   text-transform: uppercase;
 }
 
-/* FEATURED STORIES */
+/* SQUARE FEATURED STORIES */
 
 .featured-grid {
   display: grid;
@@ -190,41 +227,6 @@ input {
 
 .featured-card {
   min-width: 0;
-}
-
-.featured-card .story-image {
-  aspect-ratio: 1 / 1;
-}
-
-.featured-card h3 {
-  font-size: 15px;
-  line-height: 1.4;
-  margin-top: 9px;
-  color: var(--navy);
-  font-weight: 700;
-}
-
-.featured-card .summary {
-  font-size: 11px;
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-.featured-card:first-child h3 {
-  font-size: 18px;
-}
-
-/* TOP STORIES */
-
-.stories-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px 13px;
-}
-
-.story-card {
-  min-width: 0;
-  overflow: hidden;
 }
 
 .story-image {
@@ -243,9 +245,40 @@ input {
   transition: transform .3s ease;
 }
 
-.story-card:hover .story-image img,
-.featured-card:hover .story-image img {
+.featured-card:hover .story-image img,
+.story-card:hover .story-image img {
   transform: scale(1.04);
+}
+
+.featured-card h3 {
+  font-size: 15px;
+  line-height: 1.4;
+  margin-top: 9px;
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.featured-card:first-child h3 {
+  font-size: 18px;
+}
+
+.featured-card .summary {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+/* TOP STORIES */
+
+.stories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px 13px;
+}
+
+.story-card {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .story-category {
@@ -352,7 +385,7 @@ input {
   grid-column: 1 / -1;
 }
 
-/* JNTV FOOTER */
+/* FOOTER */
 
 .footer {
   background: #06162d;
@@ -434,18 +467,59 @@ input {
   color: #c3ccda;
 }
 
-/* TABLET */
+/* TABLET AND SMALL LAPTOP */
 
-@media (max-width: 900px) {
-  .nav-inner {
-    justify-content: flex-start;
-    overflow-x: auto;
-    scrollbar-width: thin;
+@media(max-width: 1100px) {
+  .header-one-line {
+    width: 98%;
+    gap: 5px;
   }
 
-  .nav-inner a {
-    flex-shrink: 0;
-    padding: 17px 13px;
+  .logo-link {
+    flex-basis: 85px;
+  }
+
+  .logo-link img {
+    width: 85px;
+  }
+
+  .main-navigation a {
+    font-size: 9px;
+    padding: 10px 6px;
+  }
+
+  .header-search {
+    flex-basis: 135px;
+  }
+}
+
+@media(max-width: 850px) {
+  .header-one-line {
+    justify-content: flex-start;
+    overflow-x: auto;
+    min-height: 85px;
+  }
+
+  .logo-link {
+    flex: 0 0 80px;
+  }
+
+  .logo-link img {
+    width: 80px;
+    height: 68px;
+  }
+
+  .main-navigation {
+    flex: 0 0 auto;
+  }
+
+  .main-navigation a {
+    padding: 12px 9px;
+    font-size: 10px;
+  }
+
+  .header-search {
+    flex: 0 0 145px;
   }
 
   .stories-grid {
@@ -464,18 +538,37 @@ input {
 
 /* MOBILE */
 
-@media (max-width: 600px) {
-  body {
-    font-size: 12px;
+@media(max-width: 600px) {
+  .header-one-line {
+    min-height: 75px;
   }
 
-  .nav-inner {
-    min-height: 42px;
+  .logo-link {
+    flex-basis: 65px;
   }
 
-  .nav-inner a {
+  .logo-link img {
+    width: 65px;
+    height: 60px;
+  }
+
+  .main-navigation a {
     font-size: 9px;
-    padding: 14px 11px;
+    padding: 10px 8px;
+  }
+
+  .header-search {
+    flex-basis: 125px;
+    height: 31px;
+  }
+
+  .header-search input {
+    font-size: 10px;
+  }
+
+  .header-search button {
+    padding: 0 8px;
+    font-size: 10px;
   }
 
   .ticker-label {
@@ -557,35 +650,39 @@ input {
     font-size: 10px;
   }
 }
-
-@media (max-width: 360px) {
-  .stories-grid {
-    gap: 12px 9px;
-  }
-
-  .footer-main {
-    gap: 20px 12px;
-  }
-}
 </style>
 </head>
 
 <body>
 
-<!-- NAVIGATION HEADER -->
+<!-- JNTV HEADER: LOGO, NAVIGATION AND SEARCH ON ONE LINE -->
 
-<nav class="navbar">
-  <div class="nav-inner">
-    <a href="index.html" class="active">HOME</a>
-    <a href="latest-news.html">LATEST NEWS</a>
-    <a href="politics.html">POLITICS</a>
-    <a href="business.html">BUSINESS</a>
-    <a href="sports.html">SPORTS</a>
-    <a href="entertainment.html">ENTERTAINMENT</a>
-    <a href="videos.html">VIDEOS</a>
-    <a href="about.html">ABOUT US</a>
+<header class="site-header">
+  <div class="header-one-line">
+
+    <a href="index.html" class="logo-link">
+      <img
+        src="https://jamesnyarangotv.github.io/JAMO%20LOGO.jpeg"
+        alt="JNTV Logo">
+    </a>
+
+    <nav class="main-navigation">
+      <a href="index.html" class="active">HOME</a>
+      <a href="latest-news.html">LATEST NEWS</a>
+      <a href="politics.html">POLITICS</a>
+      <a href="business.html">BUSINESS</a>
+      <a href="sports.html">SPORTS</a>
+      <a href="videos.html">VIDEOS</a>
+      <a href="about.html">ABOUT US</a>
+    </nav>
+
+    <form class="header-search" id="headerSearch">
+      <input type="search" id="searchInput" placeholder="Search..." aria-label="Search news">
+      <button type="submit">GO</button>
+    </form>
+
   </div>
-</nav>
+</header>
 
 <!-- MOVING HEADLINES -->
 
@@ -688,13 +785,11 @@ input {
 
 </main>
 
-<!-- COMPLETE JNTV FOOTER -->
+<!-- JNTV FOOTER -->
 
 <footer class="footer">
 
   <div class="footer-main">
-
-    <!-- ABOUT JNTV -->
 
     <div class="footer-column">
       <h3>JAMES NYARANGO TV</h3>
@@ -713,34 +808,18 @@ input {
       </a>
     </div>
 
-    <!-- ABOUT LINKS -->
-
     <div class="footer-column">
       <h3>ABOUT JNTV</h3>
 
       <ul>
-        <li>
-          <a href="https://jamesnyarangotv.github.io/about.html">About Us</a>
-        </li>
-        <li>
-          <a href="https://jamesnyarangotv.github.io/latest-news.html">Latest News</a>
-        </li>
-        <li>
-          <a href="https://jamesnyarangotv.github.io/videos.html">Our Videos</a>
-        </li>
-        <li>
-          <a href="mailto:info@jamesnyarangotv.ac.ug">Contact Us</a>
-        </li>
-        <li>
-          <a href="https://jamesnyarangotv.github.io/about.html">Advertise With Us</a>
-        </li>
-        <li>
-          <a href="https://jamesnyarangotv.github.io/about.html">Privacy Policy</a>
-        </li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="latest-news.html">Latest News</a></li>
+        <li><a href="videos.html">Our Videos</a></li>
+        <li><a href="mailto:info@jamesnyarangotv.ac.ug">Contact Us</a></li>
+        <li><a href="about.html">Advertise With Us</a></li>
+        <li><a href="about.html">Privacy Policy</a></li>
       </ul>
     </div>
-
-    <!-- CONTACT INFORMATION -->
 
     <div class="footer-column">
       <h3>CONTACT INFORMATION</h3>
@@ -760,8 +839,6 @@ input {
         </li>
       </ul>
     </div>
-
-    <!-- OUR SERVICES -->
 
     <div class="footer-column">
       <h3>OUR SERVICES</h3>
@@ -786,7 +863,7 @@ input {
 
 </footer>
 
-<!-- SUPABASE CONNECTION -->
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -798,6 +875,21 @@ const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
 );
+
+/* HEADER SEARCH */
+
+document.getElementById("headerSearch").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const query = document.getElementById("searchInput").value.trim();
+
+  if (query) {
+    window.location.href =
+      "latest-news.html?search=" + encodeURIComponent(query);
+  }
+});
+
+/* SAFE TEXT */
 
 function safeText(value) {
   return String(value ?? "").replace(/[&<>"']/g, function(char) {
@@ -895,7 +987,7 @@ function storyCard(article) {
   `;
 }
 
-/* FEATURED STORY CARD */
+/* FEATURED CARD */
 
 function featuredCard(article, index) {
   const title = safeText(getTitle(article));
@@ -928,7 +1020,7 @@ function featuredCard(article, index) {
   `;
 }
 
-/* CATEGORY STORY CARD */
+/* CATEGORY CARD */
 
 function categoryCard(article) {
   const title = safeText(getTitle(article));
@@ -984,7 +1076,7 @@ function renderBreaking(articles) {
   document.getElementById("breakingStrip").style.display = "flex";
 }
 
-/* CATEGORY FILTERING */
+/* CATEGORY FILTER */
 
 function renderCategory(articles, category, elementId) {
   const matches = articles.filter(article =>
@@ -998,7 +1090,7 @@ function renderCategory(articles, category, elementId) {
     : `<div class="empty-message">No ${category} stories published yet.</div>`;
 }
 
-/* HOMEPAGE DISPLAY */
+/* DISPLAY NEWS */
 
 function renderHomepage(articles) {
 
@@ -1014,8 +1106,10 @@ function renderHomepage(articles) {
     ? topStories.map(storyCard).join("")
     : `<div class="empty-message">New stories will appear here when published.</div>`;
 
-  document.getElementById("latestGrid").innerHTML = articles.slice(0, 8).length
-    ? articles.slice(0, 8).map(storyCard).join("")
+  const latest = articles.slice(0, 8);
+
+  document.getElementById("latestGrid").innerHTML = latest.length
+    ? latest.map(storyCard).join("")
     : `<div class="empty-message">No latest news available.</div>`;
 
   renderCategory(articles, "politic", "politicsGrid");
@@ -1026,7 +1120,7 @@ function renderHomepage(articles) {
   renderBreaking(articles);
 }
 
-/* LOAD PUBLISHED NEWS FROM SUPABASE */
+/* LOAD PUBLISHED ARTICLES */
 
 async function loadNews() {
   try {
