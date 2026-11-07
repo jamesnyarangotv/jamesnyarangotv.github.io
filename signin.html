@@ -9,6 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 * {
     margin: 0;
@@ -150,6 +152,7 @@ nav a:hover {
     color: #d71920;
     text-decoration: none;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .login-button {
@@ -168,11 +171,18 @@ nav a:hover {
     background: #a90f16;
 }
 
+.login-button:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+}
+
 .message {
     margin-top: 18px;
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
 .back-home {
@@ -247,9 +257,9 @@ footer p {
 
     <div class="login-card">
 
-        <h2>WELCOME BACK</h2>
+        <h2 id="pageTitle">WELCOME BACK</h2>
 
-        <p class="subtitle">
+        <p class="subtitle" id="pageSubtitle">
             Sign in to your JNTV account
         </p>
 
@@ -261,11 +271,12 @@ footer p {
                     type="email"
                     id="email"
                     placeholder="Enter your email address"
+                    autocomplete="email"
                     required
                 >
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="loginPasswordGroup">
                 <label for="password">Password</label>
 
                 <div class="password-wrapper">
@@ -273,29 +284,62 @@ footer p {
                         type="password"
                         id="password"
                         placeholder="Enter your password"
+                        autocomplete="current-password"
                         required
                     >
 
                     <button
                         type="button"
                         class="show-password"
-                        onclick="togglePassword()">
+                        onclick="togglePassword('password', this)">
                         SHOW
                     </button>
                 </div>
             </div>
 
-            <div class="forgot">
-                <a href="mailto:info@jamesnyarangotv.ac.ug?subject=Password%20Recovery">
+            <div class="forgot" id="forgotLink">
+                <a href="#" id="forgotPassword">
                     Forgot Password?
                 </a>
             </div>
 
-            <button type="submit" class="login-button">
+            <div class="form-group" id="newPasswordGroup" hidden>
+                <label for="newPassword">New Password</label>
+
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="Enter your new password"
+                        minlength="8"
+                        autocomplete="new-password"
+                    >
+
+                    <button
+                        type="button"
+                        class="show-password"
+                        onclick="togglePassword('newPassword', this)">
+                        SHOW
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group" id="confirmPasswordGroup" hidden>
+                <label for="confirmPassword">Confirm New Password</label>
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm your new password"
+                    minlength="8"
+                    autocomplete="new-password"
+                >
+            </div>
+
+            <button type="submit" class="login-button" id="loginButton">
                 SIGN IN
             </button>
 
-            <div class="message" id="message"></div>
+            <div class="message" id="message" role="status" aria-live="polite"></div>
 
         </form>
 
@@ -314,9 +358,33 @@ footer p {
 </footer>
 
 <script>
-function togglePassword() {
-    const password = document.getElementById("password");
-    const button = document.querySelector(".show-password");
+
+// SUPABASE CONNECTION
+
+const SUPABASE_URL = "https://eqogivrposfajrkdwqbq.supabase.co";
+
+const SUPABASE_KEY = "sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
+
+const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+// PAGE ELEMENTS
+
+const loginForm = document.getElementById("loginForm");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const loginButton = document.getElementById("loginButton");
+const message = document.getElementById("message");
+
+let recoveryMode = false;
+
+// SHOW OR HIDE PASSWORD
+
+function togglePassword(id, button) {
+
+    const password = document.getElementById(id);
 
     if (password.type === "password") {
         password.type = "text";
@@ -327,15 +395,243 @@ function togglePassword() {
     }
 }
 
-document.getElementById("loginForm").addEventListener("submit", function(event) {
+// DISPLAY MESSAGES
+
+function showMessage(text, success = false) {
+
+    message.textContent = text;
+
+    message.style.color = success ? "#16803c" : "#d71920";
+}
+
+// LOADING BUTTON
+
+function setLoading(loading, text) {
+
+    loginButton.disabled = loading;
+
+    loginButton.textContent = loading
+        ? text
+        : (recoveryMode ? "UPDATE PASSWORD" : "SIGN IN");
+}
+
+// PASSWORD RECOVERY MODE
+
+function activateRecoveryMode() {
+
+    recoveryMode = true;
+
+    document.getElementById("pageTitle").textContent =
+        "RESET YOUR PASSWORD";
+
+    document.getElementById("pageSubtitle").textContent =
+        "Create a new password for your JNTV account.";
+
+    document.getElementById("loginPasswordGroup").hidden = true;
+    document.getElementById("forgotLink").hidden = true;
+
+    passwordInput.required = false;
+
+    document.getElementById("newPasswordGroup").hidden = false;
+    document.getElementById("confirmPasswordGroup").hidden = false;
+
+    document.getElementById("newPassword").required = true;
+    document.getElementById("confirmPassword").required = true;
+
+    loginButton.textContent = "UPDATE PASSWORD";
+
+    showMessage("Enter your new password below.", true);
+}
+
+// CHECK SUPABASE PASSWORD RECOVERY EVENT
+
+db.auth.onAuthStateChange((event, session) => {
+
+    if (event === "PASSWORD_RECOVERY" && session) {
+        activateRecoveryMode();
+    }
+
+});
+
+// SIGN IN OR UPDATE PASSWORD
+
+loginForm.addEventListener("submit", async function(event) {
+
     event.preventDefault();
 
-    document.getElementById("message").textContent =
-        "Account authentication is not yet configured.";
+    showMessage("");
 
-    document.getElementById("message").style.color = "#d71920";
+    // PASSWORD UPDATE
+
+    if (recoveryMode) {
+
+        const newPassword =
+            document.getElementById("newPassword").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        if (newPassword.length < 8) {
+            showMessage("Your new password must contain at least 8 characters.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            showMessage("Your passwords do not match.");
+            return;
+        }
+
+        setLoading(true, "UPDATING PASSWORD...");
+
+        try {
+
+            const { error } = await db.auth.updateUser({
+                password: newPassword
+            });
+
+            if (error) throw error;
+
+            showMessage(
+                "Password updated successfully. You can now sign in.",
+                true
+            );
+
+            await db.auth.signOut();
+
+            recoveryMode = false;
+
+            document.getElementById("pageTitle").textContent =
+                "WELCOME BACK";
+
+            document.getElementById("pageSubtitle").textContent =
+                "Sign in to your JNTV account";
+
+            document.getElementById("loginPasswordGroup").hidden = false;
+            document.getElementById("forgotLink").hidden = false;
+
+            passwordInput.required = true;
+
+            document.getElementById("newPasswordGroup").hidden = true;
+            document.getElementById("confirmPasswordGroup").hidden = true;
+
+            document.getElementById("newPassword").required = false;
+            document.getElementById("confirmPassword").required = false;
+
+            document.getElementById("newPassword").value = "";
+            document.getElementById("confirmPassword").value = "";
+            passwordInput.value = "";
+
+            loginButton.textContent = "SIGN IN";
+
+        } catch (error) {
+
+            showMessage(error.message);
+            setLoading(false);
+
+        }
+
+        return;
+    }
+
+    // NORMAL SIGN IN
+
+    const email = emailInput.value.trim().toLowerCase();
+
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+        showMessage("Please enter your email address and password.");
+        return;
+    }
+
+    setLoading(true, "SIGNING IN...");
+
+    try {
+
+        const { data, error } = await db.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) throw error;
+
+        if (!data.session) {
+            throw new Error("Login could not be completed. Please try again.");
+        }
+
+        showMessage("Login successful. Welcome to JNTV!", true);
+
+        loginButton.textContent = "SUCCESSFUL";
+
+        window.location.href = "index.html";
+
+    } catch (error) {
+
+        let errorMessage = error.message;
+
+        if (
+            error.message.toLowerCase().includes("email not confirmed")
+        ) {
+            errorMessage =
+                "Please confirm your email address before signing in. Check your inbox.";
+        }
+
+        showMessage(errorMessage);
+
+        setLoading(false);
+
+    }
+
 });
+
+// FORGOT PASSWORD
+
+document.getElementById("forgotPassword")
+.addEventListener("click", async function(event) {
+
+    event.preventDefault();
+
+    const email = emailInput.value.trim().toLowerCase();
+
+    if (!email) {
+
+        showMessage("Please enter your email address first.");
+
+        emailInput.focus();
+
+        return;
+    }
+
+    showMessage("");
+
+    this.style.pointerEvents = "none";
+
+    try {
+
+        const { error } = await db.auth.resetPasswordForEmail(email, {
+            redirectTo:
+                "https://jamesnyarangotv.github.io/signin.html"
+        });
+
+        if (error) throw error;
+
+        showMessage(
+            "Password recovery instructions have been sent. Please check your email.",
+            true
+        );
+
+    } catch (error) {
+
+        showMessage(error.message);
+
+    } finally {
+
+        this.style.pointerEvents = "auto";
+
+    }
+
+});
+
 </script>
 
 </body>
-</html>
