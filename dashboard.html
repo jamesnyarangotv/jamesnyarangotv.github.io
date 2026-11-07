@@ -6,7 +6,7 @@
 <title>Member Dashboard | JAMES NYARANGO TV</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -14,7 +14,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 
 body{
-font-family:'Manrope',sans-serif;
+font-family:'Jost',sans-serif;
 background:#f3f4f6;
 color:#202020;
 font-size:14px;
@@ -36,8 +36,8 @@ gap:13px;
 .brand img{width:58px;height:55px;object-fit:contain}
 
 .brand h1{
-font-family:'Playfair Display',serif;
 font-size:21px;
+font-weight:800;
 }
 
 nav{
@@ -66,8 +66,8 @@ margin-bottom:25px;
 }
 
 .welcome h2{
-font-family:'Playfair Display',serif;
 font-size:29px;
+font-weight:800;
 margin-bottom:8px;
 }
 
@@ -88,6 +88,7 @@ box-shadow:0 3px 15px #0000000b;
 
 .card h3{
 font-size:17px;
+font-weight:800;
 margin-bottom:17px;
 }
 
@@ -124,11 +125,9 @@ margin-top:14px;
 }
 
 button:hover{background:#a90f16}
+button:disabled{opacity:.65;cursor:not-allowed}
 
-.secondary{
-background:#292929;
-}
-
+.secondary{background:#292929}
 .secondary:hover{background:#444}
 
 .message{
@@ -150,13 +149,11 @@ margin-top:45px;
 }
 
 footer h3{
-font-family:'Playfair Display',serif;
 font-size:20px;
+font-weight:800;
 }
 
 footer p{color:#ccc;margin-top:8px}
-
-.hidden{display:none}
 
 @media(max-width:650px){
 .grid{grid-template-columns:1fr}
@@ -191,10 +188,13 @@ nav{gap:10px;flex-wrap:wrap}
 
 <section class="card">
 <h3>MY ACCOUNT</h3>
+
 <p><strong>Full Name:</strong> <span id="fullName">Loading...</span></p>
 <p><strong>Email:</strong> <span id="email">Loading...</span></p>
 <p><strong>Username:</strong> <span id="username">Loading...</span></p>
-<p><strong>Phone:</strong> <span id="phone">Not provided</span></p>
+<p><strong>Phone:</strong> <span id="phone">Loading...</span></p>
+<p><strong>Member ID:</strong> <span id="memberId">Loading...</span></p>
+<p><strong>Registration Date:</strong> <span id="registrationDate">Loading...</span></p>
 <p><strong>Account Status:</strong> <span class="status" id="accountStatus">Checking...</span></p>
 </section>
 
@@ -202,16 +202,18 @@ nav{gap:10px;flex-wrap:wrap}
 <h3>EDIT MY PROFILE</h3>
 
 <form id="profileForm">
+
 <label for="editName">Full Name</label>
-<input id="editName" type="text" required>
+<input id="editName" type="text" maxlength="100" required>
 
 <label for="editUsername">Username</label>
-<input id="editUsername" type="text" required>
+<input id="editUsername" type="text" minlength="3" maxlength="30" required>
 
 <label for="editPhone">Phone Number</label>
 <input id="editPhone" type="tel">
 
 <button type="submit" id="saveProfile">SAVE PROFILE</button>
+
 </form>
 
 <div class="message" id="profileMessage" role="status"></div>
@@ -221,13 +223,15 @@ nav{gap:10px;flex-wrap:wrap}
 <h3>CHANGE PASSWORD</h3>
 
 <form id="passwordForm">
+
 <label for="newPassword">New Password</label>
-<input id="newPassword" type="password" minlength="8" required>
+<input id="newPassword" type="password" minlength="8" autocomplete="new-password" required>
 
 <label for="confirmPassword">Confirm New Password</label>
-<input id="confirmPassword" type="password" minlength="8" required>
+<input id="confirmPassword" type="password" minlength="8" autocomplete="new-password" required>
 
 <button type="submit" id="passwordButton">UPDATE PASSWORD</button>
+
 </form>
 
 <div class="message" id="passwordMessage" role="status"></div>
@@ -235,10 +239,13 @@ nav{gap:10px;flex-wrap:wrap}
 
 <section class="card">
 <h3>MEMBER SECURITY</h3>
+
 <p>Your JNTV account is connected to Supabase authentication.</p>
 <p><strong>Login:</strong> Email and password</p>
 <p><strong>Membership:</strong> <span class="status">Registered member</span></p>
+
 <button class="secondary" id="logoutButton">SIGN OUT</button>
+
 <div class="message" id="logoutMessage" role="status"></div>
 </section>
 
@@ -253,6 +260,7 @@ nav{gap:10px;flex-wrap:wrap}
 
 <script>
 const SUPABASE_URL = "https://eqogivrposfajrkdwqbq.supabase.co";
+
 const SUPABASE_KEY = "sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
 
 const db = window.supabase.createClient(
@@ -262,134 +270,207 @@ SUPABASE_KEY
 
 let currentUser = null;
 
-function showMessage(id, text, success=false){
-const el = document.getElementById(id);
-el.textContent = text;
-el.style.color = success ? "#16803c" : "#d71920";
+function showMessage(id,text,success=false){
+const el=document.getElementById(id);
+el.textContent=text;
+el.style.color=success?"#16803c":"#d71920";
 }
 
 function showProfile(user){
-const meta = user.user_metadata || {};
 
-const fullName = meta.full_name || meta.name || "";
-const username = meta.username || "";
-const phone = meta.phone || "";
+const meta=user.user_metadata||{};
 
-document.getElementById("welcomeName").textContent =
-"WELCOME, " + (fullName || username || "JNTV MEMBER").toUpperCase() + "!";
+const fullName=meta.full_name||meta.name||"";
+const username=meta.username||"";
+const phone=meta.phone||"";
 
-document.getElementById("fullName").textContent = fullName || "Not provided";
-document.getElementById("email").textContent = user.email || "";
-document.getElementById("username").textContent = username || "Not provided";
-document.getElementById("phone").textContent = phone || "Not provided";
+document.getElementById("welcomeName").textContent=
+"WELCOME, "+(fullName||username||"JNTV MEMBER").toUpperCase()+"!";
 
-document.getElementById("accountStatus").textContent =
-user.email_confirmed_at ? "Verified" : "Email not verified";
+document.getElementById("fullName").textContent=fullName||"Not provided";
+document.getElementById("email").textContent=user.email||"Not provided";
+document.getElementById("username").textContent=username||"Not provided";
+document.getElementById("phone").textContent=phone||"Not provided";
 
-document.getElementById("editName").value = fullName;
-document.getElementById("editUsername").value = username;
-document.getElementById("editPhone").value = phone;
+document.getElementById("memberId").textContent=
+user.id ? "JNTV-"+user.id.substring(0,8).toUpperCase() : "Unavailable";
+
+const created=user.created_at;
+
+document.getElementById("registrationDate").textContent=
+created ? new Date(created).toLocaleDateString("en-GB",{
+day:"2-digit",
+month:"long",
+year:"numeric"
+}) : "Unavailable";
+
+document.getElementById("accountStatus").textContent=
+user.email_confirmed_at?"Verified":"Email not verified";
+
+document.getElementById("editName").value=fullName;
+document.getElementById("editUsername").value=username;
+document.getElementById("editPhone").value=phone;
 }
 
 async function initializeDashboard(){
-const {data, error} = await db.auth.getSession();
 
-if(error || !data.session){
+try{
+
+const {data,error}=await db.auth.getSession();
+
+if(error) throw error;
+
+if(!data.session){
 window.location.replace("signin.html");
 return;
 }
 
-currentUser = data.session.user;
+currentUser=data.session.user;
 showProfile(currentUser);
+
+}catch(error){
+
+document.getElementById("welcomeName").textContent="ACCOUNT ERROR";
+showMessage("profileMessage",error.message);
+
+}
 }
 
 initializeDashboard();
 
 // SAVE PROFILE
 
-document.getElementById("profileForm").addEventListener("submit", async function(e){
+document.getElementById("profileForm").addEventListener("submit",async function(e){
+
 e.preventDefault();
 
-const button = document.getElementById("saveProfile");
-button.disabled = true;
-button.textContent = "SAVING...";
+if(!currentUser) return;
 
-const {data, error} = await db.auth.updateUser({
-data:{
-full_name: document.getElementById("editName").value.trim(),
-username: document.getElementById("editUsername").value.trim(),
-phone: document.getElementById("editPhone").value.trim()
-}
-});
+const button=document.getElementById("saveProfile");
 
-button.disabled = false;
-button.textContent = "SAVE PROFILE";
+const fullName=document.getElementById("editName").value.trim();
+const username=document.getElementById("editUsername").value.trim();
+const phone=document.getElementById("editPhone").value.trim();
 
-if(error){
-showMessage("profileMessage", error.message);
+if(fullName.length<2){
+showMessage("profileMessage","Please enter your full name.");
 return;
 }
 
-currentUser = data.user;
+if(username.length<3){
+showMessage("profileMessage","Username must contain at least 3 characters.");
+return;
+}
+
+button.disabled=true;
+button.textContent="SAVING...";
+
+try{
+
+const {data,error}=await db.auth.updateUser({
+data:{
+full_name:fullName,
+username:username,
+phone:phone
+}
+});
+
+if(error) throw error;
+
+currentUser=data.user;
 showProfile(currentUser);
+
 showMessage("profileMessage","Your profile has been updated successfully.",true);
+
+}catch(error){
+
+showMessage("profileMessage",error.message);
+
+}finally{
+
+button.disabled=false;
+button.textContent="SAVE PROFILE";
+
+}
+
 });
 
 // CHANGE PASSWORD
 
-document.getElementById("passwordForm").addEventListener("submit", async function(e){
+document.getElementById("passwordForm").addEventListener("submit",async function(e){
+
 e.preventDefault();
 
-const password = document.getElementById("newPassword").value;
-const confirm = document.getElementById("confirmPassword").value;
-const button = document.getElementById("passwordButton");
+if(!currentUser) return;
 
-if(password.length < 8){
+const password=document.getElementById("newPassword").value;
+const confirm=document.getElementById("confirmPassword").value;
+const button=document.getElementById("passwordButton");
+
+if(password.length<8){
 showMessage("passwordMessage","Password must contain at least 8 characters.");
 return;
 }
 
-if(password !== confirm){
+if(password!==confirm){
 showMessage("passwordMessage","Your passwords do not match.");
 return;
 }
 
-button.disabled = true;
-button.textContent = "UPDATING...";
+button.disabled=true;
+button.textContent="UPDATING...";
 
-const {error} = await db.auth.updateUser({password});
+try{
 
-button.disabled = false;
-button.textContent = "UPDATE PASSWORD";
+const {error}=await db.auth.updateUser({password});
 
-if(error){
-showMessage("passwordMessage",error.message);
-return;
-}
+if(error) throw error;
 
 document.getElementById("passwordForm").reset();
+
 showMessage("passwordMessage","Your password has been updated successfully.",true);
+
+}catch(error){
+
+showMessage("passwordMessage",error.message);
+
+}finally{
+
+button.disabled=false;
+button.textContent="UPDATE PASSWORD";
+
+}
+
 });
 
 // SIGN OUT
 
 document.getElementById("logoutButton").addEventListener("click",async function(){
 
-const button = this;
-button.disabled = true;
-button.textContent = "SIGNING OUT...";
+const button=this;
 
-const {error} = await db.auth.signOut();
+button.disabled=true;
+button.textContent="SIGNING OUT...";
 
-if(error){
-button.disabled = false;
-button.textContent = "SIGN OUT";
-showMessage("logoutMessage",error.message);
-return;
-}
+try{
+
+const {error}=await db.auth.signOut();
+
+if(error) throw error;
 
 window.location.replace("signin.html");
+
+}catch(error){
+
+button.disabled=false;
+button.textContent="SIGN OUT";
+
+showMessage("logoutMessage",error.message);
+
+}
+
 });
+
 </script>
 
 </body>
