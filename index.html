@@ -27,9 +27,7 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Jost', sans-serif;
@@ -44,7 +42,7 @@ a {
   text-decoration: none;
 }
 
-/* ONE-LINE HEADER */
+/* HEADER */
 
 .site-header {
   width: 100%;
@@ -98,6 +96,29 @@ a {
 .main-navigation a:hover,
 .main-navigation a.active {
   background: var(--red);
+}
+
+/* MEMBER ACCESS LINKS */
+
+.main-navigation a.register-link {
+  background: var(--red);
+  color: #fff;
+  margin-left: 5px;
+}
+
+.main-navigation a.register-link:hover {
+  background: #a90f16;
+}
+
+.main-navigation a.signin-link {
+  background: #fff;
+  color: var(--navy);
+  margin-left: 5px;
+}
+
+.main-navigation a.signin-link:hover {
+  background: #e5e9ef;
+  color: var(--red);
 }
 
 .header-search {
@@ -162,7 +183,7 @@ a {
   text-transform: uppercase;
 }
 
-/* SQUARE FEATURED STORIES */
+/* FEATURED STORIES */
 
 .featured-grid {
   display: grid;
@@ -170,9 +191,7 @@ a {
   gap: 14px;
 }
 
-.featured-card {
-  min-width: 0;
-}
+.featured-card { min-width: 0; }
 
 .story-image {
   display: block;
@@ -203,9 +222,7 @@ a {
   font-weight: 700;
 }
 
-.featured-card:first-child h3 {
-  font-size: 18px;
-}
+.featured-card:first-child h3 { font-size: 18px; }
 
 .featured-card .summary {
   font-size: 11px;
@@ -259,9 +276,7 @@ a {
 
 /* CATEGORY SECTIONS */
 
-.category-section {
-  padding: 25px 0 8px;
-}
+.category-section { padding: 25px 0 8px; }
 
 .category-grid {
   display: grid;
@@ -290,9 +305,7 @@ a {
   font-weight: 700;
 }
 
-.category-card .story-date {
-  font-size: 10px;
-}
+.category-card .story-date { font-size: 10px; }
 
 .loading,
 .empty-message,
@@ -323,9 +336,7 @@ a {
   gap: 30px;
 }
 
-.footer-column {
-  min-width: 0;
-}
+.footer-column { min-width: 0; }
 
 .footer-column h3 {
   color: #fff;
@@ -343,9 +354,7 @@ a {
   overflow-wrap: anywhere;
 }
 
-.footer-column ul {
-  list-style: none;
-}
+.footer-column ul { list-style: none; }
 
 .footer-column li {
   margin: 8px 0;
@@ -362,9 +371,7 @@ a {
 }
 
 .footer-column li a:hover,
-.footer-column .footer-website:hover {
-  color: #fff;
-}
+.footer-column .footer-website:hover { color: #fff; }
 
 .footer-column .footer-website {
   display: inline-block;
@@ -386,7 +393,7 @@ a {
   color: #c3ccda;
 }
 
-/* TABLET AND SMALL LAPTOP */
+/* TABLET */
 
 @media(max-width: 1100px) {
   .header-one-line {
@@ -399,19 +406,15 @@ a {
     margin-left: 8px;
   }
 
-  .logo-link img {
-    width: 85px;
-  }
+  .logo-link img { width: 85px; }
 
   .main-navigation a {
     font-size: 10px;
     font-weight: 800;
-    padding: 10px 6px;
+    padding: 10px 5px;
   }
 
-  .header-search {
-    flex-basis: 135px;
-  }
+  .header-search { flex-basis: 115px; }
 }
 
 @media(max-width: 850px) {
@@ -431,19 +434,15 @@ a {
     height: 68px;
   }
 
-  .main-navigation {
-    flex: 0 0 auto;
-  }
+  .main-navigation { flex: 0 0 auto; }
 
   .main-navigation a {
-    padding: 12px 9px;
+    padding: 12px 8px;
     font-size: 10px;
     font-weight: 800;
   }
 
-  .header-search {
-    flex: 0 0 145px;
-  }
+  .header-search { flex: 0 0 145px; }
 
   .stories-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -462,9 +461,7 @@ a {
 /* MOBILE */
 
 @media(max-width: 600px) {
-  .header-one-line {
-    min-height: 75px;
-  }
+  .header-one-line { min-height: 75px; }
 
   .logo-link {
     flex-basis: 65px;
@@ -479,7 +476,7 @@ a {
   .main-navigation a {
     font-size: 9px;
     font-weight: 800;
-    padding: 10px 8px;
+    padding: 10px 7px;
   }
 
   .header-search {
@@ -487,52 +484,36 @@ a {
     height: 31px;
   }
 
-  .header-search input {
-    font-size: 10px;
-  }
+  .header-search input { font-size: 10px; }
 
   .header-search button {
     padding: 0 8px;
     font-size: 10px;
   }
 
-  .container {
-    width: 93%;
-  }
+  .container { width: 93%; }
 
-  .section {
-    padding-top: 19px;
-  }
+  .section { padding-top: 19px; }
 
-  .section-heading h2 {
-    font-size: 17px;
-  }
+  .section-heading h2 { font-size: 17px; }
 
   .featured-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
   }
 
-  .featured-card:first-child {
-    grid-column: span 2;
-  }
+  .featured-card:first-child { grid-column: span 2; }
 
-  .featured-card h3 {
-    font-size: 12px;
-  }
+  .featured-card h3 { font-size: 12px; }
 
-  .featured-card:first-child h3 {
-    font-size: 15px;
-  }
+  .featured-card:first-child h3 { font-size: 15px; }
 
   .stories-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px 11px;
   }
 
-  .story-card h3 {
-    font-size: 12px;
-  }
+  .story-card h3 { font-size: 12px; }
 
   .category-grid {
     grid-template-columns: 1fr;
@@ -551,9 +532,7 @@ a {
     padding-bottom: 25px;
   }
 
-  .footer-column h3 {
-    font-size: 12px;
-  }
+  .footer-column h3 { font-size: 12px; }
 
   .footer-column p,
   .footer-column li,
@@ -562,16 +541,14 @@ a {
     font-size: 11px;
   }
 
-  .footer-bottom {
-    font-size: 10px;
-  }
+  .footer-bottom { font-size: 10px; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- JNTV HEADER: LOGO, NAVIGATION AND SEARCH ON ONE LINE -->
+<!-- JNTV HEADER -->
 
 <header class="site-header">
   <div class="header-one-line">
@@ -590,6 +567,10 @@ a {
       <a href="sports.html">SPORTS</a>
       <a href="videos.html">VIDEOS</a>
       <a href="about.html">ABOUT US</a>
+
+      <!-- MEMBER REGISTRATION AND LOGIN -->
+      <a href="register.html" class="register-link">REGISTER</a>
+      <a href="signin.html" class="signin-link">SIGN IN</a>
     </nav>
 
     <form class="header-search" id="headerSearch">
@@ -602,8 +583,6 @@ a {
 
 <main class="container">
 
-  <!-- FEATURED NEWS -->
-
   <section class="section">
     <div class="section-heading">
       <h2>Featured News</h2>
@@ -614,8 +593,6 @@ a {
       <div class="loading">Loading featured stories...</div>
     </div>
   </section>
-
-  <!-- TOP STORIES -->
 
   <section class="section">
     <div class="section-heading">
@@ -628,8 +605,6 @@ a {
     </div>
   </section>
 
-  <!-- POLITICS -->
-
   <section class="category-section">
     <div class="section-heading">
       <h2>Politics</h2>
@@ -640,8 +615,6 @@ a {
       <div class="loading">Loading politics stories...</div>
     </div>
   </section>
-
-  <!-- BUSINESS -->
 
   <section class="category-section">
     <div class="section-heading">
@@ -654,8 +627,6 @@ a {
     </div>
   </section>
 
-  <!-- SPORTS -->
-
   <section class="category-section">
     <div class="section-heading">
       <h2>Sports</h2>
@@ -666,8 +637,6 @@ a {
       <div class="loading">Loading sports stories...</div>
     </div>
   </section>
-
-  <!-- LATEST NEWS -->
 
   <section class="section">
     <div class="section-heading">
@@ -682,7 +651,7 @@ a {
 
 </main>
 
-<!-- JNTV FOOTER -->
+<!-- FOOTER -->
 
 <footer class="footer">
 
@@ -760,7 +729,7 @@ a {
 
 </footer>
 
-<!-- SUPABASE -->
+<!-- SUPABASE NEWS CONNECTION -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
