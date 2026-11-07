@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Member Dashboard | JAMES NYARANGO TV</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:'Manrope',sans-serif;
+background:#f3f4f6;
+color:#202020;
+font-size:14px;
+}
+
+header{
+background:#101010;
+color:white;
+padding:15px 5%;
+border-bottom:4px solid #d71920;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:13px;
+}
+
+.brand img{width:58px;height:55px;object-fit:contain}
+
+.brand h1{
+font-family:'Playfair Display',serif;
+font-size:21px;
+}
+
+nav{
+background:#171717;
+padding:12px 5%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+color:white;
+}
+
+nav a{color:white;text-decoration:none;font-weight:700}
+
+.container{
+max-width:1050px;
+margin:35px auto;
+padding:0 18px;
+}
+
+.welcome{
+background:#151515;
+color:white;
+padding:30px;
+border-left:5px solid #d71920;
+margin-bottom:25px;
+}
+
+.welcome h2{
+font-family:'Playfair Display',serif;
+font-size:29px;
+margin-bottom:8px;
+}
+
+.welcome p{color:#ddd}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:18px;
+}
+
+.card{
+background:white;
+padding:24px;
+border-top:3px solid #d71920;
+box-shadow:0 3px 15px #0000000b;
+}
+
+.card h3{
+font-size:17px;
+margin-bottom:17px;
+}
+
+.card p{
+margin:10px 0;
+overflow-wrap:anywhere;
+}
+
+label{
+display:block;
+font-weight:700;
+margin:13px 0 6px;
+}
+
+input{
+width:100%;
+padding:11px;
+border:1px solid #ccc;
+font:inherit;
+outline:none;
+}
+
+input:focus{border-color:#d71920}
+
+button{
+background:#d71920;
+color:white;
+border:0;
+padding:11px 17px;
+font:inherit;
+font-weight:800;
+cursor:pointer;
+margin-top:14px;
+}
+
+button:hover{background:#a90f16}
+
+.secondary{
+background:#292929;
+}
+
+.secondary:hover{background:#444}
+
+.message{
+margin-top:12px;
+font-weight:700;
+line-height:1.6;
+overflow-wrap:anywhere;
+}
+
+.status{color:#16803c;font-weight:800}
+
+footer{
+background:#111820;
+color:white;
+text-align:center;
+padding:25px 15px;
+border-top:4px solid #d71920;
+margin-top:45px;
+}
+
+footer h3{
+font-family:'Playfair Display',serif;
+font-size:20px;
+}
+
+footer p{color:#ccc;margin-top:8px}
+
+.hidden{display:none}
+
+@media(max-width:650px){
+.grid{grid-template-columns:1fr}
+.welcome h2{font-size:24px}
+nav{gap:10px;flex-wrap:wrap}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="brand">
+<img src="JAMO%20LOGO.jpeg" alt="JNTV Logo">
+<h1>JAMES NYARANGO TV</h1>
+</div>
+</header>
+
+<nav>
+<span>MEMBER DASHBOARD</span>
+<a href="index.html">VISIT WEBSITE ↗</a>
+</nav>
+
+<main class="container">
+
+<section class="welcome">
+<h2 id="welcomeName">WELCOME BACK!</h2>
+<p>Welcome to your personal JNTV member account.</p>
+</section>
+
+<div class="grid">
+
+<section class="card">
+<h3>MY ACCOUNT</h3>
+<p><strong>Full Name:</strong> <span id="fullName">Loading...</span></p>
+<p><strong>Email:</strong> <span id="email">Loading...</span></p>
+<p><strong>Username:</strong> <span id="username">Loading...</span></p>
+<p><strong>Phone:</strong> <span id="phone">Not provided</span></p>
+<p><strong>Account Status:</strong> <span class="status" id="accountStatus">Checking...</span></p>
+</section>
+
+<section class="card">
+<h3>EDIT MY PROFILE</h3>
+
+<form id="profileForm">
+<label for="editName">Full Name</label>
+<input id="editName" type="text" required>
+
+<label for="editUsername">Username</label>
+<input id="editUsername" type="text" required>
+
+<label for="editPhone">Phone Number</label>
+<input id="editPhone" type="tel">
+
+<button type="submit" id="saveProfile">SAVE PROFILE</button>
+</form>
+
+<div class="message" id="profileMessage" role="status"></div>
+</section>
+
+<section class="card">
+<h3>CHANGE PASSWORD</h3>
+
+<form id="passwordForm">
+<label for="newPassword">New Password</label>
+<input id="newPassword" type="password" minlength="8" required>
+
+<label for="confirmPassword">Confirm New Password</label>
+<input id="confirmPassword" type="password" minlength="8" required>
+
+<button type="submit" id="passwordButton">UPDATE PASSWORD</button>
+</form>
+
+<div class="message" id="passwordMessage" role="status"></div>
+</section>
+
+<section class="card">
+<h3>MEMBER SECURITY</h3>
+<p>Your JNTV account is connected to Supabase authentication.</p>
+<p><strong>Login:</strong> Email and password</p>
+<p><strong>Membership:</strong> <span class="status">Registered member</span></p>
+<button class="secondary" id="logoutButton">SIGN OUT</button>
+<div class="message" id="logoutMessage" role="status"></div>
+</section>
+
+</div>
+</main>
+
+<footer>
+<h3>JAMES NYARANGO TV</h3>
+<p>NEWS • CURRENT AFFAIRS • MEDIA</p>
+<p>© 2026 JAMES NYARANGO TV. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<script>
+const SUPABASE_URL = "https://eqogivrposfajrkdwqbq.supabase.co";
+const SUPABASE_KEY = "sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-";
+
+const db = window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+let currentUser = null;
+
+function showMessage(id, text, success=false){
+const el = document.getElementById(id);
+el.textContent = text;
+el.style.color = success ? "#16803c" : "#d71920";
+}
+
+function showProfile(user){
+const meta = user.user_metadata || {};
+
+const fullName = meta.full_name || meta.name || "";
+const username = meta.username || "";
+const phone = meta.phone || "";
+
+document.getElementById("welcomeName").textContent =
+"WELCOME, " + (fullName || username || "JNTV MEMBER").toUpperCase() + "!";
+
+document.getElementById("fullName").textContent = fullName || "Not provided";
+document.getElementById("email").textContent = user.email || "";
+document.getElementById("username").textContent = username || "Not provided";
+document.getElementById("phone").textContent = phone || "Not provided";
+
+document.getElementById("accountStatus").textContent =
+user.email_confirmed_at ? "Verified" : "Email not verified";
+
+document.getElementById("editName").value = fullName;
+document.getElementById("editUsername").value = username;
+document.getElementById("editPhone").value = phone;
+}
+
+async function initializeDashboard(){
+const {data, error} = await db.auth.getSession();
+
+if(error || !data.session){
+window.location.replace("signin.html");
+return;
+}
+
+currentUser = data.session.user;
+showProfile(currentUser);
+}
+
+initializeDashboard();
+
+// SAVE PROFILE
+
+document.getElementById("profileForm").addEventListener("submit", async function(e){
+e.preventDefault();
+
+const button = document.getElementById("saveProfile");
+button.disabled = true;
+button.textContent = "SAVING...";
+
+const {data, error} = await db.auth.updateUser({
+data:{
+full_name: document.getElementById("editName").value.trim(),
+username: document.getElementById("editUsername").value.trim(),
+phone: document.getElementById("editPhone").value.trim()
+}
+});
+
+button.disabled = false;
+button.textContent = "SAVE PROFILE";
+
+if(error){
+showMessage("profileMessage", error.message);
+return;
+}
+
+currentUser = data.user;
+showProfile(currentUser);
+showMessage("profileMessage","Your profile has been updated successfully.",true);
+});
+
+// CHANGE PASSWORD
+
+document.getElementById("passwordForm").addEventListener("submit", async function(e){
+e.preventDefault();
+
+const password = document.getElementById("newPassword").value;
+const confirm = document.getElementById("confirmPassword").value;
+const button = document.getElementById("passwordButton");
+
+if(password.length < 8){
+showMessage("passwordMessage","Password must contain at least 8 characters.");
+return;
+}
+
+if(password !== confirm){
+showMessage("passwordMessage","Your passwords do not match.");
+return;
+}
+
+button.disabled = true;
+button.textContent = "UPDATING...";
+
+const {error} = await db.auth.updateUser({password});
+
+button.disabled = false;
+button.textContent = "UPDATE PASSWORD";
+
+if(error){
+showMessage("passwordMessage",error.message);
+return;
+}
+
+document.getElementById("passwordForm").reset();
+showMessage("passwordMessage","Your password has been updated successfully.",true);
+});
+
+// SIGN OUT
+
+document.getElementById("logoutButton").addEventListener("click",async function(){
+
+const button = this;
+button.disabled = true;
+button.textContent = "SIGNING OUT...";
+
+const {error} = await db.auth.signOut();
+
+if(error){
+button.disabled = false;
+button.textContent = "SIGN OUT";
+showMessage("logoutMessage",error.message);
+return;
+}
+
+window.location.replace("signin.html");
+});
+</script>
+
+</body>
+</html>
