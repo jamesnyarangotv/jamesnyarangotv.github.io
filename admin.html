@@ -133,6 +133,37 @@ textarea{min-height:140px;resize:vertical;line-height:1.7}
 .search-box{max-width:360px}
 footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
 .hidden{display:none!important}
+
+/* PUBLISHING SHARE CONFIRMATION */
+.share-panel{
+  background:white;border:1px solid var(--border);
+  border-top:4px solid var(--red);
+  padding:22px;margin:18px 0 20px;border-radius:4px
+}
+.share-panel h3{
+  font-family:"Playfair Display",serif;
+  font-size:20px;margin:0 0 8px
+}
+.share-image{
+  width:100%;max-width:420px;max-height:230px;
+  object-fit:cover;border-radius:4px;margin:14px 0;
+  display:none
+}
+.share-links{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;margin-top:17px
+}
+.share-link-item{
+  min-width:0;background:#f2f4f6;padding:12px;
+  border:1px solid var(--border);border-radius:3px
+}
+.share-link-item label{margin:0 0 8px}
+.share-link-item input{
+  font-size:10px;padding:9px;margin-bottom:9px
+}
+.share-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.share-actions .btn{font-size:10px}
+.share-note{font-size:11px;line-height:1.7;color:#66717b;margin-top:12px}
 @media(max-width:650px){
   .container{padding:0 12px}
   .panel{padding:17px}
@@ -144,6 +175,7 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
   .article-row{align-items:flex-start;flex-direction:column}
   .topbar{padding:14px}
   .brand h1{font-size:17px}
+  .share-links{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -201,6 +233,51 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
   </div>
 
   <div id="message"></div>
+
+  <!-- AUTOMATIC SHARING CONFIRMATION -->
+  <section id="sharePanel" class="share-panel hidden">
+    <h3>Article Published Successfully</h3>
+    <p class="muted" id="shareHeadline"></p>
+
+    <img id="shareImage" class="share-image" alt="Published article photograph">
+
+    <div class="share-note">
+      Your article has been saved. Use the links below to share it on social media.
+    </div>
+
+    <div class="share-links">
+
+      <div class="share-link-item">
+        <label>WHATSAPP / FACEBOOK PREVIEW LINK</label>
+        <input id="smartWorkerLink" type="text" readonly>
+        <button class="btn btn-red" type="button" id="copySmartLink">
+          COPY SHARING LINK
+        </button>
+      </div>
+
+      <div class="share-link-item">
+        <label>ORIGINAL WEBSITE ARTICLE LINK</label>
+        <input id="websiteArticleLink" type="text" readonly>
+        <button class="btn btn-dark" type="button" id="copyWebsiteLink">
+          COPY ARTICLE LINK
+        </button>
+      </div>
+
+    </div>
+
+    <div class="share-actions">
+      <button class="btn btn-red" type="button" id="openWhatsApp">
+        SHARE ON WHATSAPP
+      </button>
+      <button class="btn btn-dark" type="button" id="openArticle">
+        VIEW WEBSITE ARTICLE
+      </button>
+    </div>
+
+    <p class="share-note">
+      Important: Share the Smart Worker link on Facebook and WhatsApp to generate the photograph and headline preview. The original website link takes readers directly to your article.
+    </p>
+  </section>
 
   <section class="panel">
     <h2 class="heading" id="formHeading">Create News Article</h2>
@@ -314,6 +391,12 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   'sb_publishable_l4sKYCzUW6670QvOMtBE_Q_kRCbwDZ-';
 
+const WEBSITE_URL =
+  'https://jamesnyarangotv.github.io';
+
+const SMART_WORKER_URL =
+  SUPABASE_URL + '/functions/v1/smart-worker';
+
 const db = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_KEY
@@ -357,6 +440,120 @@ function slugify(text) {
     .replace(/^-|-$/g,'');
 }
 
+/* GENERATE ARTICLE AND SHARING LINKS */
+
+function getArticleLinks(articleId) {
+  const id=encodeURIComponent(articleId);
+
+  return {
+    website:
+      WEBSITE_URL+'/article.html?id='+id,
+
+    sharing:
+      SMART_WORKER_URL+'?id='+id+'&v=10'
+  };
+}
+
+/* SHOW PUBLISHING CONFIRMATION */
+
+function showSharingDetails(article) {
+  if(!article || !article.id) {
+    throw new Error('Article ID was not returned by Supabase.');
+  }
+
+  const links=getArticleLinks(article.id);
+
+  $('shareHeadline').textContent=article.title || '';
+
+  $('smartWorkerLink').value=links.sharing;
+  $('websiteArticleLink').value=links.website;
+
+  const image=$('shareImage');
+
+  if(article.image_url) {
+    image.src=article.image_url;
+    image.style.display='block';
+  } else {
+    image.removeAttribute('src');
+    image.style.display='none';
+  }
+
+  $('sharePanel').classList.remove('hidden');
+
+  $('sharePanel').scrollIntoView({
+    behavior:'smooth',
+    block:'start'
+  });
+}
+
+/* COPY LINKS */
+
+async function copyText(text,button,originalText) {
+  try {
+    if(navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const temporary=document.createElement('textarea');
+      temporary.value=text;
+      temporary.style.position='fixed';
+      temporary.style.opacity='0';
+      document.body.appendChild(temporary);
+      temporary.select();
+
+      if(!document.execCommand('copy')) {
+        throw new Error('Copy operation failed.');
+      }
+
+      temporary.remove();
+    }
+
+    button.textContent='COPIED!';
+    setTimeout(()=>{
+      button.textContent=originalText;
+    },1800);
+
+  } catch(error) {
+    alert('Could not copy automatically. Please select and copy the link manually.');
+  }
+}
+
+$('copySmartLink').addEventListener('click',()=>{
+  copyText(
+    $('smartWorkerLink').value,
+    $('copySmartLink'),
+    'COPY SHARING LINK'
+  );
+});
+
+$('copyWebsiteLink').addEventListener('click',()=>{
+  copyText(
+    $('websiteArticleLink').value,
+    $('copyWebsiteLink'),
+    'COPY ARTICLE LINK'
+  );
+});
+
+$('openWhatsApp').addEventListener('click',()=>{
+  const link=$('smartWorkerLink').value;
+  const headline=$('shareHeadline').textContent;
+
+  const text=headline+'\n\nRead more: '+link;
+
+  window.open(
+    'https://wa.me/?text='+encodeURIComponent(text),
+    '_blank',
+    'noopener'
+  );
+});
+
+$('openArticle').addEventListener('click',()=>{
+  window.open(
+    $('websiteArticleLink').value,
+    '_blank',
+    'noopener'
+  );
+});
+
 /* ADMINISTRATOR VERIFICATION */
 
 async function verifyAdmin(user) {
@@ -374,7 +571,7 @@ async function verifyAdmin(user) {
 
   if(!data) {
     throw new Error(
-      'Your login is valid, but your account is not registered in admin_users. Contact the project administrator.'
+      'Your login is valid, but your account is not registered in admin_users.'
     );
   }
 
@@ -628,23 +825,37 @@ $('articleForm').addEventListener('submit',async e=>{
       result=await db
         .from('articles')
         .update(article)
-        .eq('id',editingId);
+        .eq('id',editingId)
+        .select('id,title,image_url,status')
+        .single();
     } else {
       result=await db
         .from('articles')
-        .insert(article);
+        .insert(article)
+        .select('id,title,image_url,status')
+        .single();
     }
 
     if(result.error) throw result.error;
 
-    showMessage(
-      editingId?
-      'Article updated successfully!':
-      'Article saved successfully!'
-    );
+    const savedArticle=result.data;
 
     clearForm();
     await loadArticles();
+
+    if(savedArticle.status==='published') {
+      showSharingDetails(savedArticle);
+
+      showMessage(
+        'Article published successfully! Your sharing links are ready.'
+      );
+    } else {
+      $('sharePanel').classList.add('hidden');
+
+      showMessage(
+        'Article saved as draft successfully.'
+      );
+    }
 
   } catch(error) {
     showMessage(error.message,'error');
@@ -657,6 +868,8 @@ $('articleForm').addEventListener('submit',async e=>{
 /* EDIT ARTICLE */
 
 function editArticle(article) {
+  $('sharePanel').classList.add('hidden');
+
   $('editingId').value=article.id;
   $('title').value=article.title || '';
   $('category').value=article.category || 'Politics';
@@ -698,6 +911,8 @@ async function deleteArticle(article) {
 
     if(error) throw error;
 
+    $('sharePanel').classList.add('hidden');
+
     showMessage('Article deleted successfully.');
     await loadArticles();
 
@@ -731,6 +946,7 @@ $('logoutBtn').addEventListener('click',async()=>{
   $('loginSection').classList.remove('hidden');
   $('password').value='';
   $('loginMessage').classList.add('hidden');
+  $('sharePanel').classList.add('hidden');
 
   clearForm();
 });
