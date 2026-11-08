@@ -358,6 +358,47 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
     </form>
   </section>
 
+  <!-- KENYA 2027 ELECTION GALLERY MANAGER -->
+  <section class="panel">
+    <h2 class="heading">Kenya 2027 Election Gallery</h2>
+    <p class="muted">Upload and manage photographs displayed in the homepage election slideshow.</p>
+
+    <form id="electionPhotoForm">
+      <label>Select Photograph</label>
+      <input type="file" id="electionPhotoFile"
+        accept="image/jpeg,image/png,image/webp,image/gif" required>
+
+      <img id="electionPhotoPreview" class="preview"
+        alt="Election photograph preview">
+
+      <div class="muted" style="margin-top:7px">
+        JPG, PNG, WEBP or GIF. Maximum 5 MB.
+      </div>
+
+      <label>Photo Caption</label>
+      <input id="electionPhotoCaption" type="text"
+        maxlength="150" placeholder="Enter photograph caption" required>
+
+      <label>Photo Category</label>
+      <select id="electionPhotoCategory">
+        <option>KENYA POLITICS</option>
+        <option>POLITICAL LEADERSHIP</option>
+        <option>ELECTION CAMPAIGNS</option>
+        <option>KENYA ELECTION 2027</option>
+      </select>
+
+      <button class="btn btn-red full" id="electionPhotoSave" type="submit">
+        UPLOAD ELECTION PHOTOGRAPH
+      </button>
+    </form>
+
+    <div id="electionPhotoMessage" class="notice hidden"></div>
+
+    <h3 style="margin-top:25px">Uploaded Election Photographs</h3>
+    <div id="electionPhotoList">Loading photographs...</div>
+  </section>
+  <!-- END ELECTION GALLERY MANAGER -->
+
   <section class="panel">
     <div class="dashboard-head">
       <div>
@@ -588,6 +629,7 @@ async function openDashboard(user) {
   $('dashboard').classList.remove('hidden');
 
   await loadArticles();
+  await loadElectionPhotos();
 }
 
 /* LOGIN */
@@ -934,6 +976,285 @@ function clearForm() {
 }
 
 $('newBtn').addEventListener('click',clearForm);
+
+/* ==================================================
+   KENYA 2027 ELECTION GALLERY
+   ================================================== */
+
+/* GALLERY PHOTO PREVIEW */
+
+$('electionPhotoFile').addEventListener('change',()=>{
+  const file=$('electionPhotoFile').files[0];
+  const preview=$('electionPhotoPreview');
+
+  if(!file) {
+    preview.style.display='none';
+    preview.removeAttribute('src');
+    return;
+  }
+
+  if(file.size>5*1024*1024) {
+    showElectionPhotoMessage(
+      'Photograph exceeds the 5 MB limit.',
+      'error'
+    );
+    $('electionPhotoFile').value='';
+    preview.style.display='none';
+    return;
+  }
+
+  if(!['image/jpeg','image/png','image/webp','image/gif']
+    .includes(file.type)) {
+    showElectionPhotoMessage(
+      'Please select a JPG, PNG, WEBP or GIF photograph.',
+      'error'
+    );
+    $('electionPhotoFile').value='';
+    preview.style.display='none';
+    return;
+  }
+
+  preview.src=URL.createObjectURL(file);
+  preview.style.display='block';
+});
+
+/* GALLERY MESSAGES */
+
+function showElectionPhotoMessage(message,type='success') {
+  const el=$('electionPhotoMessage');
+
+  el.textContent=message;
+  el.classList.remove('hidden');
+
+  if(type==='error') {
+    el.style.borderLeftColor='#c90019';
+    el.style.background='#ffe9e9';
+    el.style.color='#a40018';
+  } else {
+    el.style.borderLeftColor='#18733b';
+    el.style.background='#e8f6ed';
+    el.style.color='#176a35';
+  }
+}
+
+/* LOAD ELECTION PHOTOGRAPHS */
+
+async function loadElectionPhotos() {
+  const list=$('electionPhotoList');
+
+  list.textContent='Loading photographs...';
+
+  const {data,error}=await db
+    .from('election_gallery')
+    .select('*')
+    .order('created_at',{ascending:false});
+
+  if(error) {
+    list.textContent=
+      'Could not load election photographs: '+error.message;
+    return;
+  }
+
+  if(!data || !data.length) {
+    list.textContent='No election photographs uploaded yet.';
+    return;
+  }
+
+  list.innerHTML='';
+
+  data.forEach(photo=>{
+    const row=document.createElement('div');
+    row.className='article-row';
+
+    const info=document.createElement('div');
+    info.className='article-info';
+
+    const image=document.createElement('img');
+    image.src=photo.image_url;
+    image.alt=photo.caption || 'Election photograph';
+    image.style.width='150px';
+    image.style.height='95px';
+    image.style.objectFit='cover';
+    image.style.borderRadius='4px';
+    image.style.display='block';
+    image.style.marginBottom='10px';
+
+    const caption=document.createElement('strong');
+    caption.textContent=photo.caption || '';
+
+    const category=document.createElement('div');
+    category.className='article-meta';
+    category.textContent=photo.category || 'KENYA POLITICS';
+
+    const date=document.createElement('div');
+    date.className='article-meta';
+    date.textContent=photo.created_at
+      ?new Date(photo.created_at).toLocaleDateString()
+      :'';
+
+    info.append(image,caption,category,date);
+
+    const buttons=document.createElement('div');
+    buttons.className='article-buttons';
+
+    const remove=document.createElement('button');
+    remove.className='btn btn-danger';
+    remove.textContent='DELETE PHOTO';
+
+    remove.addEventListener('click',()=>{
+      deleteElectionPhoto(photo);
+    });
+
+    buttons.appendChild(remove);
+    row.append(info,buttons);
+    list.appendChild(row);
+  });
+}
+
+/* UPLOAD ELECTION PHOTOGRAPH */
+
+$('electionPhotoForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+
+  const button=$('electionPhotoSave');
+  const file=$('electionPhotoFile').files[0];
+  const caption=$('electionPhotoCaption').value.trim();
+
+  if(!file) {
+    showElectionPhotoMessage(
+      'Please select a photograph.',
+      'error'
+    );
+    return;
+  }
+
+  if(!caption) {
+    showElectionPhotoMessage(
+      'Please enter a photograph caption.',
+      'error'
+    );
+    return;
+  }
+
+  if(file.size>5*1024*1024) {
+    showElectionPhotoMessage(
+      'Photograph exceeds the 5 MB limit.',
+      'error'
+    );
+    return;
+  }
+
+  if(!['image/jpeg','image/png','image/webp','image/gif']
+    .includes(file.type)) {
+    showElectionPhotoMessage(
+      'Unsupported photograph format.',
+      'error'
+    );
+    return;
+  }
+
+  button.disabled=true;
+  button.textContent='UPLOADING PHOTOGRAPH...';
+
+  let uploadedPath=null;
+
+  try {
+    const extension=file.name.split('.').pop().toLowerCase();
+
+    const path=currentUser.id+
+      '/election-'+Date.now()+'-'+
+      Math.random().toString(36).slice(2)+
+      '.'+extension;
+
+    const {error:uploadError}=await db.storage
+      .from('jntv-images')
+      .upload(path,file,{
+        cacheControl:'3600',
+        upsert:false,
+        contentType:file.type
+      });
+
+    if(uploadError) throw uploadError;
+
+    uploadedPath=path;
+
+    const {data:publicData}=db.storage
+      .from('jntv-images')
+      .getPublicUrl(path);
+
+    const {error:insertError}=await db
+      .from('election_gallery')
+      .insert({
+        image_url:publicData.publicUrl,
+        storage_path:path,
+        caption:caption,
+        category:$('electionPhotoCategory').value,
+        is_active:true,
+        created_by:currentUser.id
+      });
+
+    if(insertError) {
+      await db.storage.from('jntv-images').remove([path]);
+      throw insertError;
+    }
+
+    $('electionPhotoForm').reset();
+    $('electionPhotoPreview').style.display='none';
+    $('electionPhotoPreview').removeAttribute('src');
+
+    showElectionPhotoMessage(
+      'Election photograph uploaded successfully.'
+    );
+
+    await loadElectionPhotos();
+
+  } catch(error) {
+    showElectionPhotoMessage(
+      'Upload failed: '+error.message,
+      'error'
+    );
+  } finally {
+    button.disabled=false;
+    button.textContent='UPLOAD ELECTION PHOTOGRAPH';
+  }
+});
+
+/* DELETE ELECTION PHOTOGRAPH */
+
+async function deleteElectionPhoto(photo) {
+  if(!confirm(
+    'Are you sure you want to permanently delete this election photograph?'
+  )) return;
+
+  try {
+    const {error:storageError}=await db.storage
+      .from('jntv-images')
+      .remove([photo.storage_path]);
+
+    if(storageError) throw storageError;
+
+    const {error:deleteError}=await db
+      .from('election_gallery')
+      .delete()
+      .eq('id',photo.id);
+
+    if(deleteError) throw deleteError;
+
+    showElectionPhotoMessage(
+      'Election photograph deleted successfully.'
+    );
+
+    await loadElectionPhotos();
+
+  } catch(error) {
+    showElectionPhotoMessage(
+      'Could not delete photograph: '+error.message,
+      'error'
+    );
+  }
+}
+
+/* END KENYA 2027 ELECTION GALLERY */
 
 /* LOG OUT */
 
