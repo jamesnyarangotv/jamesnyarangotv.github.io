@@ -429,9 +429,13 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   opacity: 0;
   transition: opacity 1s ease;
+  pointer-events: none;
 }
 
-.election-slide.active { opacity: 1; }
+.election-slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 .election-slide img {
   width: 100%;
@@ -440,8 +444,6 @@ a { color: inherit; text-decoration: none; }
   object-fit: cover;
   object-position: center 25%;
 }
-
-/* YOUR PHOTO PLACEHOLDERS */
 
 .election-photo-placeholder {
   width: 100%;
@@ -632,9 +634,7 @@ a { color: inherit; text-decoration: none; }
 
 @media(max-width: 1100px) {
   .header-one-line { width: 98%; gap: 5px; }
-
   .logo-link { flex-basis: 85px; margin-left: 8px; }
-
   .logo-link img { width: 85px; }
 
   .main-navigation a {
@@ -644,7 +644,6 @@ a { color: inherit; text-decoration: none; }
   }
 
   .main-navigation a.register-link { margin-left: auto; }
-
   .header-search { flex-basis: 115px; }
 }
 
@@ -656,9 +655,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   .logo-link { flex: 0 0 80px; margin-left: 5px; }
-
   .logo-link img { width: 80px; height: 68px; }
-
   .main-navigation { flex: 0 0 auto; }
 
   .main-navigation a {
@@ -668,11 +665,8 @@ a { color: inherit; text-decoration: none; }
   }
 
   .main-navigation a.register-link { margin-left: 5px; }
-
   .header-search { flex: 0 0 145px; }
-
   .stories-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
   .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .footer-main {
@@ -685,15 +679,10 @@ a { color: inherit; text-decoration: none; }
 
 @media(max-width: 700px) {
   .election-content { grid-template-columns: 1fr; }
-
   .election-information { padding: 25px 17px; }
-
   .election-information h2 { font-size: 27px; }
-
   .election-gallery { min-height: 250px; }
-
   .election-photo-placeholder { min-height: 250px; }
-
   .election-slide-caption h3 { font-size: 16px; }
 
   .election-bottom {
@@ -704,9 +693,7 @@ a { color: inherit; text-decoration: none; }
 
 @media(max-width: 600px) {
   .header-one-line { min-height: 75px; }
-
   .logo-link { flex-basis: 65px; margin-left: 4px; }
-
   .logo-link img { width: 65px; height: 60px; }
 
   .main-navigation a {
@@ -730,9 +717,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   .container { width: 93%; }
-
   .section { padding-top: 19px; }
-
   .section-heading h2 { font-size: 17px; }
 
   .featured-grid {
@@ -741,9 +726,7 @@ a { color: inherit; text-decoration: none; }
   }
 
   .featured-card:first-child { grid-column: span 2; }
-
   .featured-card h3 { font-size: 12px; }
-
   .featured-card:first-child h3 { font-size: 15px; }
 
   .stories-grid {
@@ -752,7 +735,6 @@ a { color: inherit; text-decoration: none; }
   }
 
   .story-card h3 { font-size: 12px; }
-
   .category-grid { grid-template-columns: 1fr; gap: 10px; }
 
   .category-card .story-image {
@@ -868,48 +850,12 @@ a { color: inherit; text-decoration: none; }
 
     </div>
 
-    <!-- YOUR OWN PHOTOGRAPHS GO HERE -->
+    <!-- PHOTOGRAPHS LOAD AUTOMATICALLY FROM SUPABASE -->
 
     <div class="election-gallery" id="electionGallery">
 
-      <div class="election-slide active">
-        <div class="election-photo-placeholder">YOUR PHOTO 1</div>
-        <div class="election-slide-caption">
-          <span>KENYA POLITICS</span>
-          <h3>Election Coverage</h3>
-        </div>
-      </div>
-
-      <div class="election-slide">
-        <div class="election-photo-placeholder">YOUR PHOTO 2</div>
-        <div class="election-slide-caption">
-          <span>POLITICAL LEADERSHIP</span>
-          <h3>Election Coverage</h3>
-        </div>
-      </div>
-
-      <div class="election-slide">
-        <div class="election-photo-placeholder">YOUR PHOTO 3</div>
-        <div class="election-slide-caption">
-          <span>KENYA POLITICS</span>
-          <h3>Election Coverage</h3>
-        </div>
-      </div>
-
-      <div class="election-slide">
-        <div class="election-photo-placeholder">YOUR PHOTO 4</div>
-        <div class="election-slide-caption">
-          <span>KENYA POLITICS</span>
-          <h3>Election Coverage</h3>
-        </div>
-      </div>
-
-      <div class="election-slide">
-        <div class="election-photo-placeholder">YOUR PHOTO 5</div>
-        <div class="election-slide-caption">
-          <span>KENYA POLITICS</span>
-          <h3>Election Coverage</h3>
-        </div>
+      <div class="election-photo-placeholder" id="galleryLoading">
+        LOADING ELECTION PHOTOGRAPHS...
       </div>
 
       <div class="election-gallery-controls">
@@ -1065,7 +1011,7 @@ a { color: inherit; text-decoration: none; }
 
 </footer>
 
-<!-- SUPABASE NEWS CONNECTION -->
+<!-- SUPABASE CONNECTION -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -1138,90 +1084,190 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
 
 })();
 
-/* AUTOMATIC PHOTO GALLERY */
+/* SUPABASE AUTOMATIC ELECTION PHOTO GALLERY */
 
-(function startElectionGallery() {
+async function startElectionGallery() {
 
   const gallery = document.getElementById("electionGallery");
-
-  const slides = Array.from(
-    gallery.querySelectorAll(".election-slide")
-  );
-
   const dotsContainer = document.getElementById("electionDots");
 
   const previousButton = document.getElementById("electionPrevious");
   const nextButton = document.getElementById("electionNext");
 
+  const loadingMessage = document.getElementById("galleryLoading");
+
   let currentSlide = 0;
-  let galleryTimer;
+  let galleryTimer = null;
+  let slides = [];
+  let dots = [];
 
-  slides.forEach((slide, index) => {
+  try {
 
-    const dot = document.createElement("button");
+    const { data: photos, error } = await supabaseClient
+      .from("election_gallery")
+      .select("id, image_url, caption, category, created_at")
+      .eq("is_active", true)
+      .order("created_at", { ascending: false });
 
-    dot.type = "button";
-    dot.className = "election-dot";
+    if (error) throw error;
 
-    dot.setAttribute(
-      "aria-label",
-      "Show photograph " + (index + 1)
-    );
+    if (loadingMessage) loadingMessage.remove();
 
-    dot.addEventListener("click", () => {
-      showSlide(index);
+    if (!photos || photos.length === 0) {
+
+      const empty = document.createElement("div");
+      empty.className = "election-photo-placeholder";
+      empty.textContent = "NO ELECTION PHOTOS UPLOADED YET";
+
+      gallery.insertBefore(empty, gallery.querySelector(".election-gallery-controls"));
+
+      previousButton.style.display = "none";
+      nextButton.style.display = "none";
+
+      return;
+    }
+
+    photos.forEach((photo, index) => {
+
+      if (!photo.image_url) return;
+
+      const slide = document.createElement("div");
+      slide.className = "election-slide";
+
+      if (index === 0) slide.classList.add("active");
+
+      const image = document.createElement("img");
+      image.src = photo.image_url;
+      image.alt = photo.caption || "JNTV Election Coverage";
+      image.loading = index === 0 ? "eager" : "lazy";
+
+      image.onerror = function() {
+        slide.remove();
+        console.error("Could not load gallery photograph:", photo.id);
+      };
+
+      const caption = document.createElement("div");
+      caption.className = "election-slide-caption";
+
+      const category = document.createElement("span");
+      category.textContent = photo.category || "KENYA POLITICS";
+
+      const heading = document.createElement("h3");
+      heading.textContent = photo.caption || "Election Coverage";
+
+      caption.appendChild(category);
+      caption.appendChild(heading);
+
+      slide.appendChild(image);
+      slide.appendChild(caption);
+
+      gallery.insertBefore(
+        slide,
+        gallery.querySelector(".election-gallery-controls")
+      );
+
+    });
+
+    slides = Array.from(gallery.querySelectorAll(".election-slide"));
+
+    if (slides.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "election-photo-placeholder";
+      empty.textContent = "NO PHOTOGRAPHS COULD BE DISPLAYED";
+
+      gallery.insertBefore(empty, gallery.querySelector(".election-gallery-controls"));
+
+      previousButton.style.display = "none";
+      nextButton.style.display = "none";
+      return;
+    }
+
+    slides.forEach((slide, index) => {
+
+      const dot = document.createElement("button");
+
+      dot.type = "button";
+      dot.className = "election-dot";
+
+      dot.setAttribute(
+        "aria-label",
+        "Show photograph " + (index + 1)
+      );
+
+      dot.addEventListener("click", () => {
+        showSlide(index);
+        restartGallery();
+      });
+
+      dotsContainer.appendChild(dot);
+
+    });
+
+    dots = Array.from(dotsContainer.querySelectorAll(".election-dot"));
+
+    function showSlide(index) {
+
+      currentSlide = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === currentSlide);
+      });
+
+      dots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === currentSlide);
+      });
+
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function restartGallery() {
+
+      clearInterval(galleryTimer);
+
+      if (slides.length > 1) {
+        galleryTimer = setInterval(nextSlide, 5000);
+      }
+
+    }
+
+    nextButton.addEventListener("click", () => {
+      nextSlide();
       restartGallery();
     });
 
-    dotsContainer.appendChild(dot);
-
-  });
-
-  const dots = Array.from(
-    dotsContainer.querySelectorAll(".election-dot")
-  );
-
-  function showSlide(index) {
-
-    currentSlide = (index + slides.length) % slides.length;
-
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("active", i === currentSlide);
+    previousButton.addEventListener("click", () => {
+      previousSlide();
+      restartGallery();
     });
 
-    dots.forEach((dot, i) => {
-      dot.classList.toggle("active", i === currentSlide);
-    });
-
-  }
-
-  function nextSlide() {
-    showSlide(currentSlide + 1);
-  }
-
-  function previousSlide() {
-    showSlide(currentSlide - 1);
-  }
-
-  function restartGallery() {
-    clearInterval(galleryTimer);
-    galleryTimer = setInterval(nextSlide, 5000);
-  }
-
-  nextButton.addEventListener("click", () => {
-    nextSlide();
+    showSlide(0);
     restartGallery();
-  });
 
-  previousButton.addEventListener("click", () => {
-    previousSlide();
-    restartGallery();
-  });
+    console.log("JNTV Election Gallery loaded:", slides.length, "photographs");
 
-  showSlide(0);
-  restartGallery();
+  } catch (error) {
 
-})();
+    console.error("JNTV Election Gallery Error:", error);
+
+    if (loadingMessage) {
+      loadingMessage.textContent = "GALLERY COULD NOT LOAD";
+    }
+
+    previousButton.style.display = "none";
+    nextButton.style.display = "none";
+
+  }
+
+}
+
+startElectionGallery();
 
 /* SAFE TEXT */
 
@@ -1455,6 +1501,7 @@ async function loadNews() {
 }
 
 loadNews();
+
 </script>
 
 </body>
