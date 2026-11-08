@@ -234,7 +234,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
 
   <div id="message"></div>
 
-  <!-- AUTOMATIC SHARING CONFIRMATION -->
   <section id="sharePanel" class="share-panel hidden">
     <h3>Article Published Successfully</h3>
     <p class="muted" id="shareHeadline"></p>
@@ -246,7 +245,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
     </div>
 
     <div class="share-links">
-
       <div class="share-link-item">
         <label>WHATSAPP / FACEBOOK PREVIEW LINK</label>
         <input id="smartWorkerLink" type="text" readonly>
@@ -262,7 +260,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
           COPY ARTICLE LINK
         </button>
       </div>
-
     </div>
 
     <div class="share-actions">
@@ -285,7 +282,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
 
     <form id="articleForm">
       <div class="form-grid">
-
         <div class="full-field">
           <label>Article Headline</label>
           <input id="title" type="text" placeholder="Enter news headline"
@@ -343,7 +339,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
             <label for="breaking">Mark as Breaking News</label>
           </div>
         </div>
-
       </div>
 
       <div class="actions">
@@ -358,7 +353,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
     </form>
   </section>
 
-  <!-- KENYA 2027 ELECTION GALLERY MANAGER -->
   <section class="panel">
     <h2 class="heading">Kenya 2027 Election Gallery</h2>
     <p class="muted">Upload and manage photographs displayed in the homepage election slideshow.</p>
@@ -397,7 +391,6 @@ footer{text-align:center;padding:25px;color:#7a838c;font-size:10px}
     <h3 style="margin-top:25px">Uploaded Election Photographs</h3>
     <div id="electionPhotoList">Loading photographs...</div>
   </section>
-  <!-- END ELECTION GALLERY MANAGER -->
 
   <section class="panel">
     <div class="dashboard-head">
@@ -1097,6 +1090,22 @@ async function loadElectionPhotos() {
     const buttons=document.createElement('div');
     buttons.className='article-buttons';
 
+    /* NEW: COPY DIRECT PHOTO LINK */
+
+    const copyPhoto=document.createElement('button');
+    copyPhoto.className='btn btn-dark';
+    copyPhoto.textContent='COPY PHOTO LINK';
+
+    copyPhoto.addEventListener('click',()=>{
+      copyText(
+        photo.image_url,
+        copyPhoto,
+        'COPY PHOTO LINK'
+      );
+    });
+
+    /* EXISTING DELETE BUTTON */
+
     const remove=document.createElement('button');
     remove.className='btn btn-danger';
     remove.textContent='DELETE PHOTO';
@@ -1105,7 +1114,7 @@ async function loadElectionPhotos() {
       deleteElectionPhoto(photo);
     });
 
-    buttons.appendChild(remove);
+    buttons.append(copyPhoto,remove);
     row.append(info,buttons);
     list.appendChild(row);
   });
@@ -1156,8 +1165,6 @@ $('electionPhotoForm').addEventListener('submit',async e=>{
   button.disabled=true;
   button.textContent='UPLOADING PHOTOGRAPH...';
 
-  let uploadedPath=null;
-
   try {
     const extension=file.name.split('.').pop().toLowerCase();
 
@@ -1175,8 +1182,6 @@ $('electionPhotoForm').addEventListener('submit',async e=>{
       });
 
     if(uploadError) throw uploadError;
-
-    uploadedPath=path;
 
     const {data:publicData}=db.storage
       .from('jntv-images')
