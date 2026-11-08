@@ -21,12 +21,7 @@
   --line: #e5e9ef;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+* { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
@@ -37,10 +32,7 @@ body {
   line-height: 1.55;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+a { color: inherit; text-decoration: none; }
 
 /* HEADER */
 
@@ -94,9 +86,7 @@ a {
 }
 
 .main-navigation a:hover,
-.main-navigation a.active {
-  background: var(--red);
-}
+.main-navigation a.active { background: var(--red); }
 
 .main-navigation a.register-link {
   background: var(--red);
@@ -104,9 +94,7 @@ a {
   margin-left: auto;
 }
 
-.main-navigation a.register-link:hover {
-  background: #a90f16;
-}
+.main-navigation a.register-link:hover { background: #a90f16; }
 
 .main-navigation a.signin-link {
   background: #fff;
@@ -156,9 +144,7 @@ a {
   margin: auto;
 }
 
-.section {
-  padding: 25px 0 8px;
-}
+.section { padding: 25px 0 8px; }
 
 .section-heading {
   display: flex;
@@ -209,9 +195,7 @@ a {
 }
 
 .featured-card:hover .story-image img,
-.story-card:hover .story-image img {
-  transform: scale(1.04);
-}
+.story-card:hover .story-image img { transform: scale(1.04); }
 
 .featured-card h3 {
   font-size: 15px;
@@ -237,10 +221,7 @@ a {
   gap: 16px 13px;
 }
 
-.story-card {
-  min-width: 0;
-  overflow: hidden;
-}
+.story-card { min-width: 0; overflow: hidden; }
 
 .story-category {
   display: inline-block;
@@ -316,9 +297,7 @@ a {
   grid-column: 1 / -1;
 }
 
-/* =====================================
-   JNTV KENYA 2027 ELECTION WATCH
-===================================== */
+/* JNTV KENYA 2027 ELECTION WATCH */
 
 .kenya-election {
   width: 100%;
@@ -361,9 +340,7 @@ a {
   animation: electionBlink 1.2s infinite;
 }
 
-@keyframes electionBlink {
-  50% { opacity: .3; }
-}
+@keyframes electionBlink { 50% { opacity: .3; } }
 
 .election-content {
   display: grid;
@@ -438,9 +415,7 @@ a {
   font-size: 11px;
 }
 
-.election-date-note strong {
-  color: #f2c94c;
-}
+.election-date-note strong { color: #f2c94c; }
 
 .election-gallery {
   position: relative;
@@ -456,9 +431,7 @@ a {
   transition: opacity 1s ease;
 }
 
-.election-slide.active {
-  opacity: 1;
-}
+.election-slide.active { opacity: 1; }
 
 .election-slide img {
   width: 100%;
@@ -466,6 +439,22 @@ a {
   display: block;
   object-fit: cover;
   object-position: center 25%;
+}
+
+/* YOUR PHOTO PLACEHOLDERS */
+
+.election-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #142d4b;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 2px;
 }
 
 .election-slide::after {
@@ -477,6 +466,7 @@ a {
     rgba(0,0,0,.88),
     rgba(0,0,0,.05) 75%
   );
+  pointer-events: none;
 }
 
 .election-slide-caption {
@@ -504,18 +494,6 @@ a {
   margin-bottom: 5px;
 }
 
-.election-photo-credit {
-  display: inline-block;
-  color: #e1e7ef;
-  font-size: 9px;
-  text-decoration: underline;
-  opacity: .9;
-}
-
-.election-photo-credit:hover {
-  color: #fff;
-}
-
 .election-gallery-controls {
   position: absolute;
   z-index: 4;
@@ -535,9 +513,7 @@ a {
   font-size: 17px;
 }
 
-.election-gallery-controls button:hover {
-  background: #c8102e;
-}
+.election-gallery-controls button:hover { background: #c8102e; }
 
 .election-dots {
   position: absolute;
@@ -574,50 +550,7 @@ a {
   font-size: 10px;
 }
 
-.election-bottom strong {
-  color: #fff;
-}
-
-@media(max-width: 700px) {
-  .election-content {
-    grid-template-columns: 1fr;
-  }
-
-  .election-information {
-    padding: 25px 17px;
-  }
-
-  .election-information h2 {
-    font-size: 27px;
-  }
-
-  .election-gallery {
-    min-height: 250px;
-  }
-
-  .election-slide-caption h3 {
-    font-size: 16px;
-  }
-
-  .election-bottom {
-    flex-wrap: wrap;
-    font-size: 9px;
-  }
-}
-
-@media(max-width: 380px) {
-  .countdown-unit strong {
-    font-size: 21px;
-  }
-
-  .countdown-unit span {
-    font-size: 8px;
-  }
-
-  .election-information {
-    padding: 22px 12px;
-  }
-}
+.election-bottom strong { color: #fff; }
 
 /* FOOTER */
 
@@ -698,15 +631,9 @@ a {
 /* TABLET */
 
 @media(max-width: 1100px) {
-  .header-one-line {
-    width: 98%;
-    gap: 5px;
-  }
+  .header-one-line { width: 98%; gap: 5px; }
 
-  .logo-link {
-    flex-basis: 85px;
-    margin-left: 8px;
-  }
+  .logo-link { flex-basis: 85px; margin-left: 8px; }
 
   .logo-link img { width: 85px; }
 
@@ -716,9 +643,7 @@ a {
     padding: 10px 5px;
   }
 
-  .main-navigation a.register-link {
-    margin-left: auto;
-  }
+  .main-navigation a.register-link { margin-left: auto; }
 
   .header-search { flex-basis: 115px; }
 }
@@ -730,15 +655,9 @@ a {
     min-height: 85px;
   }
 
-  .logo-link {
-    flex: 0 0 80px;
-    margin-left: 5px;
-  }
+  .logo-link { flex: 0 0 80px; margin-left: 5px; }
 
-  .logo-link img {
-    width: 80px;
-    height: 68px;
-  }
+  .logo-link img { width: 80px; height: 68px; }
 
   .main-navigation { flex: 0 0 auto; }
 
@@ -748,19 +667,13 @@ a {
     font-weight: 800;
   }
 
-  .main-navigation a.register-link {
-    margin-left: 5px;
-  }
+  .main-navigation a.register-link { margin-left: 5px; }
 
   .header-search { flex: 0 0 145px; }
 
-  .stories-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .stories-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
-  .category-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
   .footer-main {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -770,18 +683,31 @@ a {
 
 /* MOBILE */
 
+@media(max-width: 700px) {
+  .election-content { grid-template-columns: 1fr; }
+
+  .election-information { padding: 25px 17px; }
+
+  .election-information h2 { font-size: 27px; }
+
+  .election-gallery { min-height: 250px; }
+
+  .election-photo-placeholder { min-height: 250px; }
+
+  .election-slide-caption h3 { font-size: 16px; }
+
+  .election-bottom {
+    flex-wrap: wrap;
+    font-size: 9px;
+  }
+}
+
 @media(max-width: 600px) {
   .header-one-line { min-height: 75px; }
 
-  .logo-link {
-    flex-basis: 65px;
-    margin-left: 4px;
-  }
+  .logo-link { flex-basis: 65px; margin-left: 4px; }
 
-  .logo-link img {
-    width: 65px;
-    height: 60px;
-  }
+  .logo-link img { width: 65px; height: 60px; }
 
   .main-navigation a {
     font-size: 9px;
@@ -789,9 +715,7 @@ a {
     padding: 10px 7px;
   }
 
-  .main-navigation a.register-link {
-    margin-left: 5px;
-  }
+  .main-navigation a.register-link { margin-left: 5px; }
 
   .header-search {
     flex-basis: 125px;
@@ -829,10 +753,7 @@ a {
 
   .story-card h3 { font-size: 12px; }
 
-  .category-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+  .category-grid { grid-template-columns: 1fr; gap: 10px; }
 
   .category-card .story-image {
     width: 78px;
@@ -851,11 +772,15 @@ a {
   .footer-column p,
   .footer-column li,
   .footer-column li a,
-  .footer-column .footer-website {
-    font-size: 11px;
-  }
+  .footer-column .footer-website { font-size: 11px; }
 
   .footer-bottom { font-size: 10px; }
+}
+
+@media(max-width: 380px) {
+  .countdown-unit strong { font-size: 21px; }
+  .countdown-unit span { font-size: 8px; }
+  .election-information { padding: 22px 12px; }
 }
 </style>
 </head>
@@ -868,9 +793,7 @@ a {
   <div class="header-one-line">
 
     <a href="index.html" class="logo-link">
-      <img
-        src="https://jamesnyarangotv.github.io/JAMO%20LOGO.jpeg"
-        alt="JNTV Logo">
+      <img src="https://jamesnyarangotv.github.io/JAMO%20LOGO.jpeg" alt="JNTV Logo">
     </a>
 
     <nav class="main-navigation">
@@ -893,9 +816,7 @@ a {
   </div>
 </header>
 
-<!-- =====================================
-     JNTV KENYA 2027 ELECTION WATCH
-====================================== -->
+<!-- JNTV KENYA 2027 ELECTION WATCH -->
 
 <section class="kenya-election" aria-label="Kenya 2027 Election Watch">
 
@@ -947,97 +868,47 @@ a {
 
     </div>
 
-    <!-- REAL KENYAN POLITICAL FIGURES -->
+    <!-- YOUR OWN PHOTOGRAPHS GO HERE -->
 
     <div class="election-gallery" id="electionGallery">
 
-      <!-- WILLIAM RUTO -->
-
       <div class="election-slide active">
-        <img
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/William_Saomei_Ruto_official_portrait.jpg?width=1200"
-          alt="William Samoei Ruto, President of Kenya">
-
+        <div class="election-photo-placeholder">YOUR PHOTO 1</div>
         <div class="election-slide-caption">
           <span>KENYA POLITICS</span>
-          <h3>William Samoei Ruto</h3>
-          <a class="election-photo-credit"
-             href="https://commons.wikimedia.org/wiki/File:William_Saomei_Ruto_official_portrait.jpg"
-             target="_blank" rel="noopener">
-            Photo: Government of Kenya · Public domain
-          </a>
+          <h3>Election Coverage</h3>
         </div>
       </div>
 
-      <!-- KALONZO MUSYOKA -->
-
       <div class="election-slide">
-        <img
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Kalonzo_Musyoka_Greeting_People_in_Mombasa.JPG?width=1200"
-          alt="Kalonzo Musyoka greeting supporters in Mombasa">
-
+        <div class="election-photo-placeholder">YOUR PHOTO 2</div>
         <div class="election-slide-caption">
           <span>POLITICAL LEADERSHIP</span>
-          <h3>Kalonzo Musyoka</h3>
-          <a class="election-photo-credit"
-             href="https://commons.wikimedia.org/wiki/File:Kalonzo_Musyoka_Greeting_People_in_Mombasa.JPG"
-             target="_blank" rel="noopener">
-            Photo: Raidarmax · CC BY-SA 3.0
-          </a>
+          <h3>Election Coverage</h3>
         </div>
       </div>
 
-      <!-- RIGATHI GACHAGUA -->
-
       <div class="election-slide">
-        <img
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Rigathi_Gachagua_October_2023_(cropped).jpg?width=1200"
-          alt="Rigathi Gachagua at a public event">
-
+        <div class="election-photo-placeholder">YOUR PHOTO 3</div>
         <div class="election-slide-caption">
           <span>KENYA POLITICS</span>
-          <h3>Rigathi Gachagua</h3>
-          <a class="election-photo-credit"
-             href="https://commons.wikimedia.org/wiki/File:Rigathi_Gachagua_October_2023_(cropped).jpg"
-             target="_blank" rel="noopener">
-            Photo: European Union · CC BY 4.0
-          </a>
+          <h3>Election Coverage</h3>
         </div>
       </div>
 
-      <!-- FRED MATIANG'I -->
-
       <div class="election-slide">
-        <img
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Fred_Matiangi_2013_(cropped).jpg?width=1200"
-          alt="Fred Matiang'i, Kenyan public figure">
-
+        <div class="election-photo-placeholder">YOUR PHOTO 4</div>
         <div class="election-slide-caption">
           <span>KENYA POLITICS</span>
-          <h3>Fred Matiang'i</h3>
-          <a class="election-photo-credit"
-             href="https://commons.wikimedia.org/wiki/File:Fred_Matiangi_2013_(cropped).jpg"
-             target="_blank" rel="noopener">
-            Photo: ICT Authority Kenya · CC BY 2.0
-          </a>
+          <h3>Election Coverage</h3>
         </div>
       </div>
 
-      <!-- MARTHA KARUA -->
-
       <div class="election-slide">
-        <img
-          src="https://commons.wikimedia.org/wiki/Special:FilePath/Martha_Karua.jpg?width=1200"
-          alt="Martha Karua campaigning near Kisumu">
-
+        <div class="election-photo-placeholder">YOUR PHOTO 5</div>
         <div class="election-slide-caption">
           <span>KENYA POLITICS</span>
-          <h3>Martha Karua</h3>
-          <a class="election-photo-credit"
-             href="https://commons.wikimedia.org/wiki/File:Martha_Karua.jpg"
-             target="_blank" rel="noopener">
-            Photo: Tom Zed · CC BY 2.0
-          </a>
+          <h3>Election Coverage</h3>
         </div>
       </div>
 
@@ -1068,7 +939,6 @@ a {
       <h2>Featured News</h2>
       <a href="latest-news.html">More News →</a>
     </div>
-
     <div class="featured-grid" id="featuredGrid">
       <div class="loading">Loading featured stories...</div>
     </div>
@@ -1079,7 +949,6 @@ a {
       <h2>Top Stories</h2>
       <a href="latest-news.html">View All →</a>
     </div>
-
     <div class="stories-grid" id="topStories">
       <div class="loading">Loading top stories...</div>
     </div>
@@ -1090,7 +959,6 @@ a {
       <h2>Politics</h2>
       <a href="politics.html">More Politics →</a>
     </div>
-
     <div class="category-grid" id="politicsGrid">
       <div class="loading">Loading politics stories...</div>
     </div>
@@ -1101,7 +969,6 @@ a {
       <h2>Business</h2>
       <a href="business.html">More Business →</a>
     </div>
-
     <div class="category-grid" id="businessGrid">
       <div class="loading">Loading business stories...</div>
     </div>
@@ -1112,7 +979,6 @@ a {
       <h2>Sports</h2>
       <a href="sports.html">More Sports →</a>
     </div>
-
     <div class="category-grid" id="sportsGrid">
       <div class="loading">Loading sports stories...</div>
     </div>
@@ -1123,7 +989,6 @@ a {
       <h2>Latest News</h2>
       <a href="latest-news.html">All Latest News →</a>
     </div>
-
     <div class="stories-grid" id="latestGrid">
       <div class="loading">Loading latest news...</div>
     </div>
@@ -1139,24 +1004,19 @@ a {
 
     <div class="footer-column">
       <h3>JAMES NYARANGO TV</h3>
-
       <p><strong>INFORM • ENTERTAIN • EMPOWER</strong></p>
-
       <p style="margin-top:12px;">
         JNTV is a digital media platform delivering news,
         current affairs, politics, business, sports and
         entertainment from Uganda, Africa and the world.
       </p>
-
-      <a class="footer-website"
-         href="https://www.jamesnyarangotv.ac.ug/">
+      <a class="footer-website" href="https://www.jamesnyarangotv.ac.ug/">
         www.jamesnyarangotv.ac.ug
       </a>
     </div>
 
     <div class="footer-column">
       <h3>ABOUT JNTV</h3>
-
       <ul>
         <li><a href="about.html">About Us</a></li>
         <li><a href="latest-news.html">Latest News</a></li>
@@ -1169,7 +1029,6 @@ a {
 
     <div class="footer-column">
       <h3>CONTACT INFORMATION</h3>
-
       <ul>
         <li>+256 775 732 004</li>
         <li>
@@ -1179,16 +1038,13 @@ a {
         </li>
         <li>Kampala, Uganda</li>
         <li>
-          <a href="https://www.jamesnyarangotv.ac.ug/">
-            Official Website
-          </a>
+          <a href="https://www.jamesnyarangotv.ac.ug/">Official Website</a>
         </li>
       </ul>
     </div>
 
     <div class="footer-column">
       <h3>OUR SERVICES</h3>
-
       <ul>
         <li>News and Current Affairs</li>
         <li>Podcasts and Audio Programmes</li>
@@ -1267,18 +1123,9 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
     }
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-
-    const hours = Math.floor(
-      (distance / (1000 * 60 * 60)) % 24
-    );
-
-    const minutes = Math.floor(
-      (distance / (1000 * 60)) % 60
-    );
-
-    const seconds = Math.floor(
-      (distance / 1000) % 60
-    );
+    const hours = Math.floor((distance / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((distance / (1000 * 60)) % 60);
+    const seconds = Math.floor((distance / 1000) % 60);
 
     daysElement.textContent = String(days).padStart(3, "0");
     hoursElement.textContent = String(hours).padStart(2, "0");
@@ -1291,7 +1138,7 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
 
 })();
 
-/* AUTOMATIC POLITICIAN PHOTO GALLERY */
+/* AUTOMATIC PHOTO GALLERY */
 
 (function startElectionGallery() {
 
@@ -1318,7 +1165,7 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
 
     dot.setAttribute(
       "aria-label",
-      "Show politician photograph " + (index + 1)
+      "Show photograph " + (index + 1)
     );
 
     dot.addEventListener("click", () => {
