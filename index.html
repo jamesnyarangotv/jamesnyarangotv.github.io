@@ -98,8 +98,6 @@ a {
   background: var(--red);
 }
 
-/* MEMBER ACCESS LINKS */
-
 .main-navigation a.register-link {
   background: var(--red);
   color: #fff;
@@ -320,7 +318,6 @@ a {
 
 /* =====================================
    JNTV KENYA 2027 ELECTION WATCH
-   NEW SELF-CONTAINED SECTION
 ===================================== */
 
 .kenya-election {
@@ -468,6 +465,7 @@ a {
   height: 100%;
   display: block;
   object-fit: cover;
+  object-position: center 25%;
 }
 
 .election-slide::after {
@@ -476,15 +474,15 @@ a {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(0,0,0,.8),
-    rgba(0,0,0,.05) 70%
+    rgba(0,0,0,.88),
+    rgba(0,0,0,.05) 75%
   );
 }
 
 .election-slide-caption {
   position: absolute;
   z-index: 2;
-  bottom: 25px;
+  bottom: 27px;
   left: 22px;
   right: 22px;
   color: #fff;
@@ -500,9 +498,22 @@ a {
 }
 
 .election-slide-caption h3 {
-  font-size: 19px;
+  font-size: 21px;
   line-height: 1.3;
   font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.election-photo-credit {
+  display: inline-block;
+  color: #e1e7ef;
+  font-size: 9px;
+  text-decoration: underline;
+  opacity: .9;
+}
+
+.election-photo-credit:hover {
+  color: #fff;
 }
 
 .election-gallery-controls {
@@ -870,8 +881,6 @@ a {
       <a href="sports.html">SPORTS</a>
       <a href="videos.html">VIDEOS</a>
       <a href="about.html">ABOUT US</a>
-
-      <!-- MEMBER REGISTRATION AND LOGIN -->
       <a href="register.html" class="register-link">REGISTER</a>
       <a href="signin.html" class="signin-link">SIGN IN</a>
     </nav>
@@ -938,37 +947,97 @@ a {
 
     </div>
 
-    <!-- ROTATING ELECTION PHOTOGRAPHS -->
+    <!-- REAL KENYAN POLITICAL FIGURES -->
 
     <div class="election-gallery" id="electionGallery">
 
+      <!-- WILLIAM RUTO -->
+
       <div class="election-slide active">
         <img
-          src="https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?auto=format&fit=crop&w=1100&q=85"
-          alt="Ballot papers and voting materials">
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/William_Saomei_Ruto_official_portrait.jpg?width=1200"
+          alt="William Samoei Ruto, President of Kenya">
+
         <div class="election-slide-caption">
-          <span>ELECTION WATCH</span>
-          <h3>The countdown to Kenya 2027 begins</h3>
+          <span>KENYA POLITICS</span>
+          <h3>William Samoei Ruto</h3>
+          <a class="election-photo-credit"
+             href="https://commons.wikimedia.org/wiki/File:William_Saomei_Ruto_official_portrait.jpg"
+             target="_blank" rel="noopener">
+            Photo: Government of Kenya · Public domain
+          </a>
         </div>
       </div>
 
-      <div class="election-slide">
-        <img
-          src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=1100&q=85"
-          alt="Political rally and public gathering">
-        <div class="election-slide-caption">
-          <span>CAMPAIGN WATCH</span>
-          <h3>Political campaigns and the road to 2027</h3>
-        </div>
-      </div>
+      <!-- KALONZO MUSYOKA -->
 
       <div class="election-slide">
         <img
-          src="https://images.unsplash.com/photo-1494173853739-c21f58b16055?auto=format&fit=crop&w=1100&q=85"
-          alt="Public gathering">
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Kalonzo_Musyoka_Greeting_People_in_Mombasa.JPG?width=1200"
+          alt="Kalonzo Musyoka greeting supporters in Mombasa">
+
         <div class="election-slide-caption">
-          <span>KENYA 2027</span>
-          <h3>Citizens, democracy and the power of the vote</h3>
+          <span>POLITICAL LEADERSHIP</span>
+          <h3>Kalonzo Musyoka</h3>
+          <a class="election-photo-credit"
+             href="https://commons.wikimedia.org/wiki/File:Kalonzo_Musyoka_Greeting_People_in_Mombasa.JPG"
+             target="_blank" rel="noopener">
+            Photo: Raidarmax · CC BY-SA 3.0
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGATHI GACHAGUA -->
+
+      <div class="election-slide">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Rigathi_Gachagua_October_2023_(cropped).jpg?width=1200"
+          alt="Rigathi Gachagua at a public event">
+
+        <div class="election-slide-caption">
+          <span>KENYA POLITICS</span>
+          <h3>Rigathi Gachagua</h3>
+          <a class="election-photo-credit"
+             href="https://commons.wikimedia.org/wiki/File:Rigathi_Gachagua_October_2023_(cropped).jpg"
+             target="_blank" rel="noopener">
+            Photo: European Union · CC BY 4.0
+          </a>
+        </div>
+      </div>
+
+      <!-- FRED MATIANG'I -->
+
+      <div class="election-slide">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Fred_Matiangi_2013_(cropped).jpg?width=1200"
+          alt="Fred Matiang'i, Kenyan public figure">
+
+        <div class="election-slide-caption">
+          <span>KENYA POLITICS</span>
+          <h3>Fred Matiang'i</h3>
+          <a class="election-photo-credit"
+             href="https://commons.wikimedia.org/wiki/File:Fred_Matiangi_2013_(cropped).jpg"
+             target="_blank" rel="noopener">
+            Photo: ICT Authority Kenya · CC BY 2.0
+          </a>
+        </div>
+      </div>
+
+      <!-- MARTHA KARUA -->
+
+      <div class="election-slide">
+        <img
+          src="https://commons.wikimedia.org/wiki/Special:FilePath/Martha_Karua.jpg?width=1200"
+          alt="Martha Karua campaigning near Kisumu">
+
+        <div class="election-slide-caption">
+          <span>KENYA POLITICS</span>
+          <h3>Martha Karua</h3>
+          <a class="election-photo-credit"
+             href="https://commons.wikimedia.org/wiki/File:Martha_Karua.jpg"
+             target="_blank" rel="noopener">
+            Photo: Tom Zed · CC BY 2.0
+          </a>
         </div>
       </div>
 
@@ -1166,10 +1235,7 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
   }
 });
 
-/* =====================================
-   KENYA 2027 LIVE COUNTDOWN
-   EAST AFRICA TIME
-===================================== */
+/* KENYA 2027 COUNTDOWN */
 
 (function startKenyaCountdown() {
 
@@ -1221,14 +1287,11 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
   }
 
   updateCountdown();
-
   setInterval(updateCountdown, 1000);
 
 })();
 
-/* =====================================
-   AUTOMATIC ELECTION PHOTO GALLERY
-===================================== */
+/* AUTOMATIC POLITICIAN PHOTO GALLERY */
 
 (function startElectionGallery() {
 
@@ -1255,7 +1318,7 @@ document.getElementById("headerSearch").addEventListener("submit", function(e) {
 
     dot.setAttribute(
       "aria-label",
-      "Show election photograph " + (index + 1)
+      "Show politician photograph " + (index + 1)
     );
 
     dot.addEventListener("click", () => {
